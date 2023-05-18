@@ -35,7 +35,17 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Car.cs" />
+    <Compile Include="eCarColor.cs" />
+    <Compile Include="eFuelType.cs" />
+    <Compile Include="eGarageStatus.cs" />
+    <Compile Include="eMotorcycleLicenseType.cs" />
+    <Compile Include="GarageVehicle.cs" />
+    <Compile Include="Motorcycle.cs" />
+    <Compile Include="Truck.cs" />
+    <Compile Include="ValueOutOfRangeException.cs" />
     <Compile Include="Vehicle.cs" />
+    <Compile Include="Tire.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
