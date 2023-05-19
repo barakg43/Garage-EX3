@@ -52,7 +52,7 @@ namespace Ex03.ConsoleUI
         {
             string massage = i_IsExist ? "already exist" : "not exist";
 
-            Console.WriteLine($"Vehicle with license plate [{i_LicensePlate}] {massage} in garage.");
+            Console.WriteLine($@"Vehicle with license plate [{i_LicensePlate}] {massage} in garage.");
         }
         public string GetLicensePlateInputFromUser()
         {
@@ -81,6 +81,7 @@ namespace Ex03.ConsoleUI
             return userInput;
         }
 
+        
         public VehicleRepairRecord.eRepairStatus GetRepairStatusInputToFilterList()
         {
             int userInput;
@@ -102,6 +103,52 @@ namespace Ex03.ConsoleUI
             {
                 Console.WriteLine(element.ToString());
             }
+        }
+
+        private eFuelType getValidFuelTypeFromUser()
+        {
+            int userInput;
+            Array enumValues = Enum.GetValues(typeof(eFuelType));
+            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+
+            foreach (eFuelType fuelType in enumValues)
+            {
+                Console.WriteLine($"{(int)fuelType}. {fuelType}");
+            }
+
+            userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
+
+            return (eFuelType)userInput;
+        }
+
+        private float getValidFloatNumberInputFromUser(string i_InstructionMessage)
+        {
+            bool isValidFuelNumber;
+            float userInput;
+
+            Console.Write(i_InstructionMessage+": ");
+            isValidFuelNumber = float.TryParse(Console.ReadLine(), out userInput);
+            while (!isValidFuelNumber)
+            {
+                Console.Write(k_InvalidInputMsg);
+                isValidFuelNumber = float.TryParse(Console.ReadLine(), out userInput);
+            }
+
+            return userInput;
+        }
+        public void GetFuelTypeAndAmountToFill(out eFuelType o_FuelType, out float o_FuelAmountToAdd)
+        {
+
+            o_FuelAmountToAdd = getValidFloatNumberInputFromUser("Please enter the amount of fuel to add the vehicle");
+            o_FuelType = getValidFuelTypeFromUser();
+          
+        }
+
+        public void GetElectricAmountToCharge(out float o_ElectricAmountToAdd)
+        {
+            o_ElectricAmountToAdd =
+                getValidFloatNumberInputFromUser("Please enter the amount of electric to charge the vehicle");
         }
     }
 

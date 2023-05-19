@@ -6,11 +6,9 @@ namespace Ex03.ConsoleUI
 {
     public class GarageManager
     {
-        private const string k_TieMsg = "Its a tie";
         private readonly Garage r_Garage;
         private readonly UserInterface r_UserInterface;
 
-        
         public GarageManager()
         {
             r_UserInterface = new UserInterface();
@@ -20,8 +18,6 @@ namespace Ex03.ConsoleUI
         public void RunMenu()
         {
             bool isUserWantToExit = false;
-
-
 
             while (!isUserWantToExit)
             {
@@ -37,25 +33,48 @@ namespace Ex03.ConsoleUI
                     case UserInterface.eMenuOptions.ChangeVehicleStatusInGarage:
                         changeVehicleStatus();
                         break;
-                    //case UserInterface.eMenuOptions.InflateVehicleTires:
-                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
-                    //    break;
-                    //case UserInterface.eMenuOptions.FuelVehicle:
-                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
-                    //    break;
-                    //case UserInterface.eMenuOptions.ChargeVehicle:
-                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
-                    //    break;
-                    //case UserInterface.eMenuOptions.ShowVehicleDetails:
-                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
-                    //    break;
+                    case UserInterface.eMenuOptions.InflateVehicleTires:
+                        inflateAllVehicleTires();
+                        break;
+                    case UserInterface.eMenuOptions.FuelVehicle:
+                        fuelVehicle();
+                        break;
+                    case UserInterface.eMenuOptions.ChargeVehicle:
+                        chargeVehicle();
+                        break;
+                    case UserInterface.eMenuOptions.ShowVehicleDetails:
+                        printAllVehicleDetailsInGarage();
+                        break;
                     case UserInterface.eMenuOptions.Quit:
                         isUserWantToExit = true;
                         break;
                 }
-
-           
             }
+        }
+
+        private void printAllVehicleDetailsInGarage()
+        {
+            List<VehicleRepairRecord> allCVehicleRepairRecords = r_Garage.GetAllVehicleRecords();
+        }
+
+        private void chargeVehicle()
+        {
+            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
+            r_UserInterface.GetElectricAmountToCharge(out float amountToCharge);
+            r_Garage.ChargeVehicleInGarage(vehicleLicensePlate, amountToCharge);
+        }
+
+        private void fuelVehicle()
+        {
+            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
+            r_UserInterface.GetFuelTypeAndAmountToFill(out eFuelType fuelType, out float amountToFuel);
+            r_Garage.FuelVehicleInGarage(vehicleLicensePlate, fuelType, amountToFuel);
+        }
+
+        private void inflateAllVehicleTires()
+        {
+            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
+            r_Garage.InflateVehicleTiresToMaxPerssure(vehicleLicensePlate);
         }
 
         private void changeVehicleStatus()

@@ -10,9 +10,9 @@ namespace Ex03.GarageLogic
 
         private float m_CurrentEnergyAmount;
 
-        public EnergySource(float i_CurrentEnergyAmount, float i_MaxEnergyAmount)
+        protected EnergySource( float i_MaxEnergyAmount)
         {
-            m_CurrentEnergyAmount = i_CurrentEnergyAmount;
+            m_CurrentEnergyAmount = 0;
             MaxEnergyAmount = i_MaxEnergyAmount;
         }
 
