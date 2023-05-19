@@ -27,7 +27,7 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException("Wrong type of fuel to this vehicle.");
             }
 
-            CurrentEnergyAmount += i_FuelAmountToAdd;
+            AddEnergyToSource(i_FuelAmountToAdd);
         }
 
     }

@@ -1,120 +1,112 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Ex03.GarageLogic;
 
-
-namespace Ex03.GarageLogic
+namespace Ex03.ConsoleUI
 {
     public class GarageManager
     {
-        private const string k_WinnerSessionStringFormat = @"The winner is {0}!";
-        private const string k_ScoreDisplayStringFormat = @"Score Balance: {0} - {1}
-              {2} - {3}";
         private const string k_TieMsg = "Its a tie";
-        private readonly GameEngine r_Engine;
-        private readonly Menu r_Menu;
-        private BoardPrinter m_BoardPrinter;
+        private readonly Garage r_Garage;
+        private readonly UserInterface r_UserInterface;
+
         
         public GarageManager()
         {
-            r_Menu = new Menu();
-            r_Engine = new GameEngine();
+            r_UserInterface = new UserInterface();
+            r_Garage = new Garage();
         }
 
         public void RunMenu()
         {
-            int size;
-            bool isUsersWantToPlay = true;
+            bool isUserWantToExit = false;
 
-            while (isUsersWantToPlay)
+
+
+            while (!isUserWantToExit)
             {
-                r_Menu.PrintMainMenu();
-                switch (r_Menu.GetAndCheckUserInputForMenuItem())
+                r_UserInterface.PrintMainMenu();
+                switch (r_UserInterface.GetAndCheckUserInputForMenuItem())
                 {
-                    case Menu.eMenuOptions.StartGameAgainstPc:
-                        r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
-                    break;
-                    case Menu.eMenuOptions.StartGameAgainstPlayer:
-                        r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Player2);
+                    case UserInterface.eMenuOptions.EnterVehicleToGarage:
+                        enterVehicleToGarage();
                         break;
-                    case Menu.eMenuOptions.Quit:
-                        isUsersWantToPlay = false;
+                    case UserInterface.eMenuOptions.ShowVehicleInGarageByStatus:
+                        showVehicleListInGarageFilterByStatus();
+                        break;
+                    case UserInterface.eMenuOptions.ChangeVehicleStatusInGarage:
+                        changeVehicleStatus();
+                        break;
+                    //case UserInterface.eMenuOptions.InflateVehicleTires:
+                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
+                    //    break;
+                    //case UserInterface.eMenuOptions.FuelVehicle:
+                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
+                    //    break;
+                    //case UserInterface.eMenuOptions.ChargeVehicle:
+                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
+                    //    break;
+                    //case UserInterface.eMenuOptions.ShowVehicleDetails:
+                    //    r_Engine.Create2Players(ePlayerName.Player1, ePlayerName.Computer);
+                    //    break;
+                    case UserInterface.eMenuOptions.Quit:
+                        isUserWantToExit = true;
                         break;
                 }
 
-                if(isUsersWantToPlay)
-                {
-                    size = r_Menu.GetAndCheckUserInputForBoardSize(r_Engine.GetMinBoardSize(), r_Engine.GetMaxBoardSize());
-                    m_BoardPrinter = new BoardPrinter((ushort)size);
-                    r_Engine.CreateNewEmptyGameBoard((ushort)size);
-                    runGame();
-                }
+           
             }
         }
 
-        private void runGame()
+        private void changeVehicleStatus()
         {
-            bool isPlayerWantToQuit = false;
+            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
+            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();
 
-            while(!isPlayerWantToQuit)
-            {
-                clearScreenAndPrintBoard();
-                r_Menu.PrintCurrentPlayerTurn(r_Engine.GetCurrentTurnPlayerName().ToString());
-                makePlayerMove();
-                if(r_Engine.IsSessionOver)
-                {
-                    clearScreenAndPrintBoard();
-                    printResults(r_Engine.IsSessionHaveWinner);
-                    isPlayerWantToQuit = r_Menu.GetEndOfGameInput();
-                    if(!isPlayerWantToQuit)
-                    {
-                        r_Engine.StartNewGameSession();
-                    }
-                }
-            }
+            r_Garage.ChangeVehicleStatus(vehicleLicensePlate, repairStatus);
         }
 
-        private void printResults(bool i_IsSessionHasPlayerWon)
+        private string getExistInGarageVehiclePlateNumber()
         {
-            Player[] players = r_Engine.GetPlayers();
+            string vehicleLicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
+            const bool v_VehicleIsExistInGarage = true;
 
-            if(i_IsSessionHasPlayerWon)
+            while (!r_Garage.IsVehicleExist(vehicleLicensePlate))
             {
-                Console.WriteLine(string.Format(k_WinnerSessionStringFormat, r_Engine.GetCurrentTurnPlayerName()));
+                r_UserInterface.PrintVehicleExistence(vehicleLicensePlate, !v_VehicleIsExistInGarage);
+                vehicleLicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
+            }
+
+            return vehicleLicensePlate;
+        }
+        private void showVehicleListInGarageFilterByStatus()
+        {
+            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();
+            List<string> vehicleListInGarage = r_Garage.GetVehiclePlateNumberListFilterByState(repairStatus);
+            r_UserInterface.PrintAllElementsInArray(vehicleListInGarage);
+        }
+
+        private void enterVehicleToGarage()
+        {
+            string vehicleLicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
+            const bool v_VehicleIsExistInGarage = true;
+
+            if (r_Garage.IsVehicleExist(vehicleLicensePlate))
+            {
+                r_UserInterface.PrintVehicleExistence(vehicleLicensePlate, v_VehicleIsExistInGarage);
             }
             else
             {
-                Console.WriteLine(k_TieMsg);
+                //TODO: complete with vehicleFactory
             }
 
-            Console.WriteLine(string.Format(k_ScoreDisplayStringFormat, players[0].Name, players[0].Score, players[1].Name, players[1].Score));
-        }
 
-        private void makePlayerMove()
-        {
-            CellBoardCoordinate turnData;
-            bool currentPlayerWantsToQuit = false;
-            eCellError cellError = eCellError.NoError;
 
-            if(r_Engine.GetCurrentTurnPlayerName() == ePlayerName.Computer)
-            {
-                r_Engine.MakeComputerMoveInHisTurn();  
-            }
-            else
-            {
-                do
-                {
-                    turnData = r_Menu.GetAndCheckUserInputForTurnDataMove(ref currentPlayerWantsToQuit, cellError);
-                }
-                while (!r_Engine.MakeValidGameMoveForCurrentPlayer(turnData, currentPlayerWantsToQuit, out cellError));
-            }
         }
+       
+        
 
-        private void clearScreenAndPrintBoard()
-        {
-            Ex02.ConsoleUtils.Screen.Clear(); 
-            m_BoardPrinter.PrintGameBoard(r_Engine.GetBoard());
-        }
+ 
+ 
     }
 }

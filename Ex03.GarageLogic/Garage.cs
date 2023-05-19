@@ -8,11 +8,18 @@ namespace Ex03.GarageLogic
 {
     public class Garage
     {
-        public enum eVehicleStatus
-        {
-            
-        }
+
         public bool IsVehicleExist(string i_VehicleLicensePlate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> GetVehiclePlateNumberListFilterByState(VehicleRepairRecord.eRepairStatus i_RepairStatus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ChangeVehicleStatus(string i_VehicleLicensePlate, VehicleRepairRecord.eRepairStatus i_RepairStatus)
         {
             throw new NotImplementedException();
         }

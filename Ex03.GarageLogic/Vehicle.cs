@@ -9,7 +9,7 @@ namespace Ex03.GarageLogic
     {
         private string m_ModelName;
         private string m_LicensePlate;
-        private readonly List<Tire> m_Tires;
+        private readonly List<Tire> r_Tires;
         private EnergySource m_EnergySource=null;
 
         public Vehicle(string i_ModelName, string i_LicensePlate,  List<Tire> i_Tires)
@@ -17,7 +17,7 @@ namespace Ex03.GarageLogic
             m_ModelName = i_ModelName;
             m_LicensePlate = i_LicensePlate;
            
-            m_Tires = i_Tires;
+            r_Tires = i_Tires;
         }
 
         public virtual void SetEnergySource(EnergySource.eType i_EnergyType, float i_MaxCapacityAmount)
@@ -28,7 +28,7 @@ namespace Ex03.GarageLogic
 
         public void InflateAllTireToMaxPressure()
         {
-            foreach(Tire singleTire in m_Tires)
+            foreach(Tire singleTire in r_Tires)
             {
                 singleTire.InflateTireToMaxPressure();
             }
@@ -36,7 +36,7 @@ namespace Ex03.GarageLogic
         }
         public void InflateAirPressureToAllTires(float i_AirPressureToAdd)
         {
-            foreach (Tire singleTire in m_Tires)
+            foreach (Tire singleTire in r_Tires)
             {
                 singleTire.InflateTire(i_AirPressureToAdd);
             }

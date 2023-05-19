@@ -1,131 +1,78 @@
 using System;
+using System.Collections.Generic;
+using Ex03.GarageLogic;
 
-
-namespace Ex03.GarageLogic
+namespace Ex03.ConsoleUI
 {
-    public class Menu
+    public class UserInterface
     {
         private const char k_Quit = 'Q';
-        private const string k_InvalidInputMsg = "The input you entered is invalid. Please try again.";
-        private const string k_EnterBoardCoordMsg = @"please enter board coordination to place your mark. 
-enter two number in <row> <column> format with space between the number ";
+        private const string k_InvalidInputMsg = "The input you entered is invalid. Please try again: ";
 
         public enum eMenuOptions
         {
-            StartGameAgainstPc = 1,
-            StartGameAgainstPlayer,
+            EnterVehicleToGarage = 1,
+            ShowVehicleInGarageByStatus,
+            ChangeVehicleStatusInGarage,
+            InflateVehicleTires,
+            FuelVehicle,
+            ChargeVehicle,
+            ShowVehicleDetails,
             Quit,
         }
 
-        public enum eEndOfGameOptions
-        {
-            Continue = 1,
-            Finish
-        }
+    
 
         public void PrintMainMenu()
         {
 
-            Console.WriteLine(
-@"#####################################
-# 1. Start game against PC
-
-
-2. Start game against another player
-
-
-3. Quit
-
-Select an option by entering its number");
+            Console.Write(
+@"###################################################
+# 1. Enter vehicle to garage                      #
+# 2. Start game against another player            #
+# 3. Print vehicle list in the garage             #
+# 4. Inflate all vehicle tire to maximum pressure #
+# 5. Fuel the vehicle                             #
+# 6. Charge the vehicle                           #
+# 7. Print all vehicle details                    #
+# 8. Quit                                         #
+###################################################");
         }
 
-        public void PrintSizeSelect()
-        {
-            Console.WriteLine(string.Format(
-@"Please select a board size from 5-9"));
-        }
 
-        public void PrintCurrentPlayerTurn(string i_PlayerName)
-        {
-            Console.WriteLine(string.Format("It's {0} turn", i_PlayerName));
-        }
+
 
         public eMenuOptions GetAndCheckUserInputForMenuItem()
         {
-            bool inputIsInvalid = true;
-            int userInput = 0;
-
-            while (inputIsInvalid)
-            {
-                int.TryParse(Console.ReadLine(), out userInput);
-                if (Enum.IsDefined(typeof(eMenuOptions), userInput))
-                {
-                    inputIsInvalid = false;
-                }
-                else
-                {
-                    Console.WriteLine(k_InvalidInputMsg);
-                }
-            }
-
+            int userInput = getValidIntegerInRange((int)eMenuOptions.EnterVehicleToGarage, (int)eMenuOptions.Quit,"menu option");
             return (eMenuOptions)userInput;
         }
 
-        public CellBoardCoordinate GetAndCheckUserInputForTurnDataMove(ref bool i_CurrentPlayerWantsToQuit, eCellError cellError)
+        public void PrintVehicleExistence(string i_LicensePlate,bool i_IsExist)
         {
-            string[] rowColRawData;
-            string inputData;
-            ushort selectRow = 0;
-            ushort selectedColumn = 0;
-            string currentMsgToUser = k_EnterBoardCoordMsg;
-            bool inputIsInvalid;
+            string massage = i_IsExist ? "already exist" : "not exist";
 
-            if (cellError != eCellError.NoError)
-            {
-                currentMsgToUser = checkCellError(cellError);
-            }
-
-            do
-            {
-                Console.WriteLine(currentMsgToUser);
-                inputData = Console.ReadLine();
-                rowColRawData = inputData.Split();
-                if (rowColRawData.Length == 1)
-                {
-                    char.TryParse(rowColRawData[0], out char singleLetterInput);
-                    inputIsInvalid = char.ToUpper(singleLetterInput) != k_Quit;
-                    i_CurrentPlayerWantsToQuit = !inputIsInvalid;
-                }
-                else
-                {
-                    inputIsInvalid = rowColRawData.Length != 2 || !ushort.TryParse(rowColRawData[0], out selectRow)
-                                                           || !ushort.TryParse(rowColRawData[1], out selectedColumn);
-                }
-
-                if (inputIsInvalid)
-                {
-                    currentMsgToUser = k_InvalidInputMsg;
-                }
-            }
-            while (inputIsInvalid);
-
-            return new CellBoardCoordinate(selectRow, selectedColumn);
+            Console.WriteLine($"Vehicle with license plate [{i_LicensePlate}] {massage} in garage.");
+        }
+        public string GetLicensePlateInputFromUser()
+        {
+            Console.WriteLine("Please enter license plate to the desire vehicle:");
+            return Console.ReadLine();
         }
     
-        public int GetAndCheckUserInputForBoardSize(int i_MinSize, int i_MaxSize)
+       
+
+        private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName)
         {
-            bool inputIsInvalid = true;
+            bool inputIsInvalid = true,isIntegerNumber;
             int userInput = 0;
 
-            Console.WriteLine(string.Format("Please select a board size between {0} and {1}", i_MinSize, i_MaxSize));
+            Console.WriteLine($"Please select a {i_ObjectName} between {i_MinValue} and {i_MaxValue}");
             while (inputIsInvalid)
             {
-                int.TryParse(Console.ReadLine(), out userInput);
-                if (userInput >= i_MinSize && userInput <= i_MaxSize)
-                {
-                    inputIsInvalid = false;
-                }
-                else
+                isIntegerNumber= int.TryParse(Console.ReadLine(), out userInput);
+                inputIsInvalid = !isIntegerNumber || userInput < i_MinValue || userInput > i_MaxValue;
+                if(inputIsInvalid)
                 {
                     Console.WriteLine(k_InvalidInputMsg);
                 }
@@ -134,50 +81,28 @@ Select an option by entering its number");
             return userInput;
         }
 
-        public bool GetEndOfGameInput()
+        public VehicleRepairRecord.eRepairStatus GetRepairStatusInputToFilterList()
         {
-            bool inputIsInvalid = true;
-            int userInput = 0;
+            int userInput;
+            Array enumValues = Enum.GetValues(typeof(VehicleRepairRecord.eRepairStatus));
+            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
 
-            Console.WriteLine(string.Format(
-@"1. Start another match
-2. Finish game
-
-Select an option by entering its number"));
-            while (inputIsInvalid)
+            foreach (VehicleRepairRecord.eRepairStatus repairStatus in enumValues)
             {
-                int.TryParse(Console.ReadLine(), out userInput);
-                if (Enum.IsDefined(typeof(eEndOfGameOptions), userInput))
-                {
-                    inputIsInvalid = false;
-                }
-                else
-                {
-                    Console.WriteLine(k_InvalidInputMsg);
-                }
+                Console.WriteLine($"{(int)repairStatus}. {repairStatus}");
             }
+            userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
 
-            return (eEndOfGameOptions)userInput == eEndOfGameOptions.Finish;
+            return (VehicleRepairRecord.eRepairStatus)userInput;
         }
-
-        private string checkCellError(eCellError cellError)
+        public void PrintAllElementsInArray<T>(List<T> i_ElementArray)
         {
-            string res;
-
-            if(cellError == eCellError.CellNotEmpty)
+            foreach(T element in i_ElementArray)
             {
-                res = "Cell is not empty";
+                Console.WriteLine(element.ToString());
             }
-            else if(cellError == eCellError.CellOutOfRange)
-            {
-                res = "Cell is out of range";
-            }
-            else
-            {
-                res = "Cant erase used cell";
-            }
-
-            return res;
         }
     }
+
 }
