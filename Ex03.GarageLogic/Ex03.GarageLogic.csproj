@@ -39,7 +39,10 @@
     <Compile Include="eCarColor.cs" />
     <Compile Include="eFuelType.cs" />
     <Compile Include="eGarageStatus.cs" />
+    <Compile Include="Electric.cs" />
     <Compile Include="eMotorcycleLicenseType.cs" />
+    <Compile Include="EnergySource.cs" />
+    <Compile Include="Fuel.cs" />
     <Compile Include="GarageVehicle.cs" />
     <Compile Include="Motorcycle.cs" />
     <Compile Include="Truck.cs" />
