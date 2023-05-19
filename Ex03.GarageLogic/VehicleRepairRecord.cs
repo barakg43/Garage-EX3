@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ex03.GarageLogic
 {
-    class VehicleRepairRecord
+    public class VehicleRepairRecord
     {
         public Vehicle VehicleToRepair { get; }
 
@@ -13,7 +13,7 @@ namespace Ex03.GarageLogic
         public string OwnerPhoneNumber { get; set; }
         public enum eRepairStatus
         {
-            InRepair,
+            InRepair = 1,
             Repaired,
             Paid
         }

@@ -12,11 +12,11 @@ namespace Ex03.GarageLogic
 
         private float m_CurrentTirePressure;
 
-        public Tire(string i_ManufacturerName, float i_MaximumTirePressure, float i_CurrentTirePressure)
+        public Tire(string i_ManufacturerName, float i_MaximumTirePressure)
         {
             r_ManufacturerName = i_ManufacturerName;
             r_MaximumTirePressure = i_MaximumTirePressure;
-            m_CurrentTirePressure = i_CurrentTirePressure;
+            m_CurrentTirePressure = 0;
         }
 
         public void InflateTire(float i_InflationAmountToAdd)

@@ -7,14 +7,14 @@ namespace Ex03.GarageLogic
 {
     public class Electric :EnergySource
     {
-        public Electric(float i_CurrentEnergyAmount, float i_BatteryTimeCapacity)
-            : base(i_CurrentEnergyAmount, i_BatteryTimeCapacity)
+        public Electric(float i_BatteryTimeCapacity)
+            : base( i_BatteryTimeCapacity)
         {
         }
 
         public void ChargingVehicle(float i_ChargingTimeToAdd)
         {
-            CurrentEnergyAmount += i_ChargingTimeToAdd;
+            AddEnergyToSource(i_ChargingTimeToAdd);
         }
     }
 }
