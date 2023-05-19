@@ -25,18 +25,18 @@ enter two number in <row> <column> format with space between the number ";
 
         public void PrintMainMenu()
         {
-            Ex02.ConsoleUtils.Screen.Clear();
-            Console.WriteLine(string.Format(
-@"Revrse X-MIX_DRIX!!
 
-1. Start game against PC
+            Console.WriteLine(
+@"#####################################
+# 1. Start game against PC
+
 
 2. Start game against another player
 
 
 3. Quit
 
-Select an option by entering its number"));
+Select an option by entering its number");
         }
 
         public void PrintSizeSelect()

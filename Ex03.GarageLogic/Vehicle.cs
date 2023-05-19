@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ex03.GarageLogic
 {
-    public class Vehicle
+    public abstract class Vehicle
     {
         private string m_ModelName;
         private string m_LicensePlate;
@@ -26,6 +26,22 @@ namespace Ex03.GarageLogic
 
         }
 
+        public void InflateAllTireToMaxPressure()
+        {
+            foreach(Tire singleTire in m_Tires)
+            {
+                singleTire.InflateTireToMaxPressure();
+            }
+
+        }
+        public void InflateAirPressureToAllTires(float i_AirPressureToAdd)
+        {
+            foreach (Tire singleTire in m_Tires)
+            {
+                singleTire.InflateTire(i_AirPressureToAdd);
+            }
+
+        }
         public float MaxEnergyAmountAllow
         {
             get

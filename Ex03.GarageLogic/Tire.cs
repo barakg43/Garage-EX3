@@ -19,16 +19,20 @@ namespace Ex03.GarageLogic
             m_CurrentTirePressure = i_CurrentTirePressure;
         }
 
-        public void InflateTire(float i_InflationAmount)
+        public void InflateTire(float i_InflationAmountToAdd)
         {
-            if(m_CurrentTirePressure + i_InflationAmount <= r_MaximumTirePressure)
+            if(m_CurrentTirePressure + i_InflationAmountToAdd <= r_MaximumTirePressure)
             {
-                m_CurrentTirePressure += i_InflationAmount;
+                m_CurrentTirePressure += i_InflationAmountToAdd;
             }
             else
             {
                 throw new ValueOutOfRangeException(0, r_MaximumTirePressure - m_CurrentTirePressure);
             }
+        }
+        public void InflateTireToMaxPressure()
+        {
+            m_CurrentTirePressure = r_MaximumTirePressure;
         }
     }
 }
