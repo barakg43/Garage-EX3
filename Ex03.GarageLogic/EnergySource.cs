@@ -31,12 +31,12 @@ namespace Ex03.GarageLogic
 
         protected void AddEnergyToSource(float i_EnergyAmountToAdd)
         {
-            if (i_EnergyAmountToAdd > MaxEnergyAmount)
+            if (m_CurrentEnergyAmount + i_EnergyAmountToAdd > MaxEnergyAmount)
             {
                     throw new ValueOutOfRangeException(0, MaxEnergyAmount - CurrentEnergyAmount);
             }
 
-            m_CurrentEnergyAmount = i_EnergyAmountToAdd;
+            m_CurrentEnergyAmount += i_EnergyAmountToAdd;
         }
         public float GetEnergyPercentRemaining()
         {

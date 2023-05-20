@@ -31,7 +31,8 @@ namespace Ex03.ConsoleUI
                         showVehicleListInGarageFilterByStatus();
                         break;
                     case UserInterface.eMenuOptions.ChangeVehicleStatusInGarage:
-                        changeVehicleStatus();
+                        //changeVehicleStatus();
+                        changeVehicleStatusIfExists();
                         break;
                     case UserInterface.eMenuOptions.InflateVehicleTires:
                         inflateAllVehicleTires();
@@ -57,24 +58,66 @@ namespace Ex03.ConsoleUI
             List<VehicleRepairRecord> allCVehicleRepairRecords = r_Garage.GetAllVehicleRecords();
         }
 
+        private void chargeVehicleIfInGarage()
+        {
+
+        }
+
         private void chargeVehicle()
         {
-            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            r_UserInterface.GetElectricAmountToCharge(out float amountToCharge);
-            r_Garage.ChargeVehicleInGarage(vehicleLicensePlate, amountToCharge);
+            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+            if(vehicleInGarage)
+            {
+                r_UserInterface.GetElectricAmountToCharge(out float amountToCharge);
+                r_Garage.ChargeVehicleInGarage(licensePlate, amountToCharge);
+            }
+            
         }
+
 
         private void fuelVehicle()
         {
-            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            r_UserInterface.GetFuelTypeAndAmountToFill(out eFuelType fuelType, out float amountToFuel);
-            r_Garage.FuelVehicleInGarage(vehicleLicensePlate, fuelType, amountToFuel);
+            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+            if(vehicleInGarage)
+            {
+                r_UserInterface.GetFuelTypeAndAmountToFill(out eFuelType fuelType, out float amountToFuel);
+                try
+                {
+                    r_Garage.FuelVehicleInGarage(licensePlate, fuelType, amountToFuel);
+                }
+                catch(Exception e)
+                {
+                    //print exception
+                }
+            }
+            
+        }
+
+        private void inflateAllTiresIfVehicleExits()
+        {
+            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+            if (vehicleInGarage)
+            {
+                r_Garage.InflateVehicleTiresToMaxPressure(licensePlate);
+            }
+
         }
 
         private void inflateAllVehicleTires()
         {
             string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            r_Garage.InflateVehicleTiresToMaxPerssure(vehicleLicensePlate);
+            r_Garage.InflateVehicleTiresToMaxPressure(vehicleLicensePlate);
+        }
+
+        private void changeVehicleStatusIfExists()
+        {
+            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+
+            if(vehicleInGarage)
+            {
+                VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();//different method for this?
+                r_Garage.ChangeVehicleStatus(licensePlate, repairStatus);
+            }
         }
 
         private void changeVehicleStatus()
@@ -83,6 +126,18 @@ namespace Ex03.ConsoleUI
             VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();
 
             r_Garage.ChangeVehicleStatus(vehicleLicensePlate, repairStatus);
+        }
+
+        private bool getLicensePlateIfVehicleInGarage(out string o_LicensePlate)
+        {
+            o_LicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
+            bool vehicleInGarage = r_Garage.IsVehicleExist(o_LicensePlate);
+            if(!vehicleInGarage)
+            {
+                r_UserInterface.PrintVehicleNotInGarage(o_LicensePlate);
+            }
+
+            return vehicleInGarage;
         }
 
         private string getExistInGarageVehiclePlateNumber()
@@ -95,7 +150,7 @@ namespace Ex03.ConsoleUI
                 r_UserInterface.PrintVehicleExistence(vehicleLicensePlate, !v_VehicleIsExistInGarage);
                 vehicleLicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
             }
-
+            
             return vehicleLicensePlate;
         }
         private void showVehicleListInGarageFilterByStatus()

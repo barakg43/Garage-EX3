@@ -6,7 +6,6 @@ namespace Ex03.ConsoleUI
 {
     public class UserInterface
     {
-        private const char k_Quit = 'Q';
         private const string k_InvalidInputMsg = "The input you entered is invalid. Please try again: ";
 
         public enum eMenuOptions
@@ -29,8 +28,8 @@ namespace Ex03.ConsoleUI
             Console.Write(
 @"###################################################
 # 1. Enter vehicle to garage                      #
-# 2. Start game against another player            #
-# 3. Print vehicle list in the garage             #
+# 2. Show list of vehicles in garage              #
+# 3. Change Status of a vehicle in garage         #
 # 4. Inflate all vehicle tire to maximum pressure #
 # 5. Fuel the vehicle                             #
 # 6. Charge the vehicle                           #
@@ -48,12 +47,18 @@ namespace Ex03.ConsoleUI
             return (eMenuOptions)userInput;
         }
 
-        public void PrintVehicleExistence(string i_LicensePlate,bool i_IsExist)
+        public void PrintVehicleExistence(string i_LicensePlate,bool i_IsExist)//only relevant if car is missing
         {
-            string massage = i_IsExist ? "already exist" : "not exist";
+            string message = i_IsExist ? "already exist" : "not exist";
 
-            Console.WriteLine($@"Vehicle with license plate [{i_LicensePlate}] {massage} in garage.");
+            Console.WriteLine($@"Vehicle with license plate [{i_LicensePlate}] {message} in garage.");
         }
+
+        public void PrintVehicleNotInGarage(string i_LicensePlate)
+        {
+            Console.WriteLine($@"Vehicle with license plate [{i_LicensePlate}] not in garage.");
+        }
+
         public string GetLicensePlateInputFromUser()
         {
             Console.WriteLine("Please enter license plate to the desire vehicle:");
@@ -64,14 +69,14 @@ namespace Ex03.ConsoleUI
 
         private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName)
         {
-            bool inputIsInvalid = true,isIntegerNumber;
+            bool inputIsInvalid = true;
             int userInput = 0;
 
             Console.WriteLine($"Please select a {i_ObjectName} between {i_MinValue} and {i_MaxValue}");
             while (inputIsInvalid)
             {
-                isIntegerNumber= int.TryParse(Console.ReadLine(), out userInput);
-                inputIsInvalid = !isIntegerNumber || userInput < i_MinValue || userInput > i_MaxValue;
+                int.TryParse(Console.ReadLine(), out userInput);
+                inputIsInvalid = !Enum.IsDefined(typeof(eMenuOptions), userInput);
                 if(inputIsInvalid)
                 {
                     Console.WriteLine(k_InvalidInputMsg);
@@ -84,7 +89,6 @@ namespace Ex03.ConsoleUI
         
         public VehicleRepairRecord.eRepairStatus GetRepairStatusInputToFilterList()
         {
-            int userInput;
             Array enumValues = Enum.GetValues(typeof(VehicleRepairRecord.eRepairStatus));
             int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
             int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
@@ -93,7 +97,7 @@ namespace Ex03.ConsoleUI
             {
                 Console.WriteLine($"{(int)repairStatus}. {repairStatus}");
             }
-            userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
+            int userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
 
             return (VehicleRepairRecord.eRepairStatus)userInput;
         }
@@ -107,7 +111,6 @@ namespace Ex03.ConsoleUI
 
         private eFuelType getValidFuelTypeFromUser()
         {
-            int userInput;
             Array enumValues = Enum.GetValues(typeof(eFuelType));
             int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
             int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
@@ -117,22 +120,27 @@ namespace Ex03.ConsoleUI
                 Console.WriteLine($"{(int)fuelType}. {fuelType}");
             }
 
-            userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
+            int userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
 
             return (eFuelType)userInput;
         }
 
         private float getValidFloatNumberInputFromUser(string i_InstructionMessage)
         {
-            bool isValidFuelNumber;
+            //bool isValidFloatNumber;
             float userInput;
 
             Console.Write(i_InstructionMessage+": ");
-            isValidFuelNumber = float.TryParse(Console.ReadLine(), out userInput);
-            while (!isValidFuelNumber)
+            /*isValidFloatNumber = float.TryParse(Console.ReadLine(), out userInput);
+            while (!isValidFloatNumber)
             {
                 Console.Write(k_InvalidInputMsg);
-                isValidFuelNumber = float.TryParse(Console.ReadLine(), out userInput);
+                isValidFloatNumber = float.TryParse(Console.ReadLine(), out userInput);
+            }*/
+
+            while(!float.TryParse(Console.ReadLine(), out userInput))
+            {
+                Console.Write(k_InvalidInputMsg);
             }
 
             return userInput;

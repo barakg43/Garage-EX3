@@ -23,10 +23,19 @@ namespace Ex03.GarageLogic
             switch(i_VehicleType)
             {
                 case eAvailableVehicle.FuelBike:
-
+                    vehicle = new Motorcycle(EnergySource.eType.Fuel, i_ModelName, i_LicensePlate);
+                    break;
+                case eAvailableVehicle.ElectricBike:
+                    vehicle = new Motorcycle(EnergySource.eType.Electric, i_ModelName, i_LicensePlate);
+                    break;
+                case eAvailableVehicle.FuelCar:
+                    vehicle = new Car(EnergySource.eType.Fuel, i_ModelName, i_LicensePlate);
                     break;
                 case eAvailableVehicle.ElectricCar:
                     vehicle = new Car(EnergySource.eType.Electric, i_ModelName, i_LicensePlate);
+                    break;
+                case eAvailableVehicle.Truck:
+                    vehicle = new Truck(EnergySource.eType.Fuel, i_ModelName, i_LicensePlate);
                     break;
             }
 

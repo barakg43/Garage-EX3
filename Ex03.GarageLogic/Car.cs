@@ -33,7 +33,7 @@ namespace Ex03.GarageLogic
         }
 
 
-        protected override void createTireList()
+        protected override void CreateTireList()
         {
             for(ushort i = 0; i < k_WheelAmount; i++)
             {

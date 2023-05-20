@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 
 namespace Ex03.GarageLogic
 {
@@ -21,34 +21,73 @@ namespace Ex03.GarageLogic
             RepairDone,
             Payed,
         }
+
+        public void AddVehicle(VehicleRepairRecord i_NewVehicle)
+        {
+            r_Vehicles.Add(i_NewVehicle.VehicleToRepair.LicensePlate, i_NewVehicle);
+        }
         public bool IsVehicleExist(string i_VehicleLicensePlate)
         {
-            throw new NotImplementedException();
+            return r_Vehicles.ContainsKey(i_VehicleLicensePlate);
         }
 
         public List<string> GetVehiclePlateNumberListFilterByState(VehicleRepairRecord.eRepairStatus i_RepairStatus)
         {
-            throw new NotImplementedException();
+            List<string> filteredList = new List<string>();
+            if(i_RepairStatus == VehicleRepairRecord.eRepairStatus.NoFilter)
+            {
+                filteredList = r_Vehicles.Keys.ToList();
+            }
+            else
+            {
+                foreach (KeyValuePair<string, VehicleRepairRecord> licensePlateAndVehicle in r_Vehicles)
+                {
+                    if (licensePlateAndVehicle.Value.RepairStatus == i_RepairStatus)
+                    {
+                        filteredList.Add(licensePlateAndVehicle.Key);
+                    }
+                }
+            }
+            
+            return filteredList;
         }
 
         public void ChangeVehicleStatus(string i_VehicleLicensePlate, VehicleRepairRecord.eRepairStatus i_RepairStatus)
         {
-            throw new NotImplementedException();
+            VehicleRepairRecord vehicleToUpdate = r_Vehicles[i_VehicleLicensePlate];
+            vehicleToUpdate.RepairStatus = i_RepairStatus;
         }
 
-        public void InflateVehicleTiresToMaxPerssure(string i_VehicleLicensePlate)
+        public void InflateVehicleTiresToMaxPressure(string i_VehicleLicensePlate)
         {
-            throw new NotImplementedException();
+            r_Vehicles[i_VehicleLicensePlate].VehicleToRepair.InflateAllTireToMaxPressure();
         }
 
         public void FuelVehicleInGarage(string i_VehicleLicensePlate, eFuelType i_FuelType, float i_AmountToFuel)
         {
-            throw new NotImplementedException();
+            Vehicle vehicleToFuel = r_Vehicles[i_VehicleLicensePlate].VehicleToRepair;
+
+            if(vehicleToFuel.EnergySource is Fuel fuel)
+            {
+                fuel.RefuelVehicle(i_FuelType, i_AmountToFuel);
+            }
+            else
+            {
+                throw new WrongEnergyTypeException(EnergySource.eType.Fuel, EnergySource.eType.Electric);
+            }
         }
 
-        public void ChargeVehicleInGarage(string i_VehicleLicensePlate, float i_OElectricAmountToAdd)
+        public void ChargeVehicleInGarage(string i_VehicleLicensePlate, float i_ElectricAmountToAdd)
         {
-            throw new NotImplementedException();
+            Vehicle vehicleToCharge = r_Vehicles[i_VehicleLicensePlate].VehicleToRepair;
+            if (vehicleToCharge.EnergySource is Electric electric)
+            {
+                electric.ChargeVehicle(i_ElectricAmountToAdd);
+            }
+            else
+            {
+                throw new WrongEnergyTypeException(EnergySource.eType.Fuel, EnergySource.eType.Electric);
+            }
         }
 
         public List<VehicleRepairRecord> GetAllVehicleRecords()
