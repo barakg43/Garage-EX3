@@ -19,6 +19,11 @@ namespace Ex03.GarageLogic
             m_CurrentTirePressure = 0;
         }
 
+        public string ManufaturerName
+        {
+            get { return r_ManufacturerName; }
+        }
+
         public void InflateTire(float i_InflationAmountToAdd)
         {
             if(m_CurrentTirePressure + i_InflationAmountToAdd <= r_MaximumTirePressure)

@@ -12,7 +12,7 @@ namespace Ex03.GarageLogic
         {
         }
 
-        public void ChargingVehicle(float i_ChargingTimeToAdd)
+        public void ChargeVehicle(float i_ChargingTimeToAdd)
         {
             AddEnergyToSource(i_ChargingTimeToAdd);
         }

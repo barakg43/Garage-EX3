@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
     public class VehicleRepairRecord
     {
@@ -13,13 +8,16 @@ namespace Ex03.GarageLogic
         public string OwnerPhoneNumber { get; set; }
         public enum eRepairStatus
         {
-            InRepair = 1,
+            NoFilter,
+            InRepair,
             Repaired,
             Paid
         }
     
 
         public eRepairStatus RepairStatus { get; set; }
+
+        
 
         public VehicleRepairRecord(Vehicle i_VehicleToRepair ,string i_OwnerName, string i_OwnerPhoneNumber)
         {
