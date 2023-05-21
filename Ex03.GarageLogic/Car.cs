@@ -13,7 +13,7 @@ namespace Ex03.GarageLogic
         private const eFuelType k_FuelTypeForFuelCar = eFuelType.Octan95;
         private const ushort k_MaxFuelAmount = 46;
         private const float k_MaxBatteryCapacity = 5.2f;
-        private const string k_ColorPropriety = "CarColor";
+        private const string k_ColorPropriety = "Car Color";
         private const string k_DoorAmountPropriety = "Amount Of Door";
         public enum eDoorAmount
         {
@@ -24,42 +24,48 @@ namespace Ex03.GarageLogic
 
         }
 
-
         private eCarColor m_Color;
-        private readonly eDoorAmount r_CarDoorNumber;
+        private eDoorAmount m_CarDoorNumber;
 
-        public Car(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate) : base( i_ModelName, i_LicensePlate, i_EnergyType)
+        public Car(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base( i_ModelName, i_LicensePlate)
         {
-            //m_Color = i_Color;
-            //r_CarDoorNumber = i_CarDoorAmount;
-            SetEnergySource(i_EnergyType);
-            CreateTireList();
+            m_Type = i_EnergyType;
+            AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxAirPressureInTire, k_WheelAmount);
         }
 
+
+        public override float GetMaxWheelPressureAllow()
+        {
+            return k_MaxAirPressureInTire;
+        }
 
         public override List<ParameterWrapper> GetUniquePropertiesDataForVehicle()
         {
             List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
 
-
             parameterList.Add(new ParameterWrapper(typeof(eCarColor), k_ColorPropriety));
-            parameterList.Add(new ParameterWrapper(typeof(eDoorAmount), k_ColorPropriety));
+            parameterList.Add(new ParameterWrapper(typeof(eDoorAmount), k_DoorAmountPropriety));
 
             return parameterList;
         }
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            throw new NotImplementedException();
-        }
-
-        protected override void CreateTireList()
-        {
-            for(ushort i = 0; i < k_WheelAmount; i++)
+            SetEnergySource(m_Type);
+            foreach (ParameterWrapper parameter in i_Parameters)
             {
-                r_Tires.Add(new Tire("bla bla",k_MaxAirPressureInTire));
+                if(parameter.Type == typeof(eCarColor))
+                {
+                    m_Color = (eCarColor)parameter.Value;
+                }
+                else if (parameter.Type == typeof(eDoorAmount))
+                {
+                    m_CarDoorNumber = (eDoorAmount)parameter.Value;
+                }
             }
         }
+
+  
 
         protected override void SetEnergySource(EnergySource.eType i_Type)
         {

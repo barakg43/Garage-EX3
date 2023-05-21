@@ -49,7 +49,7 @@
     <Compile Include="ValueOutOfRangeException.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="VehicleFactory.cs" />
-    <Compile Include="Tire.cs" />
+    <Compile Include="Wheel.cs" />
     <Compile Include="VehicleRepairRecord.cs" />
     <Compile Include="WrongEnergyTypeException.cs" />
   </ItemGroup>

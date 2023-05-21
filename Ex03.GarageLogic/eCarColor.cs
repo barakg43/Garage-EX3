@@ -7,7 +7,7 @@ namespace Ex03.GarageLogic
 {
     public enum eCarColor
     {
-        White,
+        White = 1,
         Black,
         Yellow,
         Red,

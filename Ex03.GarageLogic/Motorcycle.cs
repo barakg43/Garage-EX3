@@ -16,29 +16,46 @@ namespace Ex03.GarageLogic
         private eMotorcycleLicenseType m_LicenseType;
         private int m_EngineCapacity;
 
-        public Motorcycle(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate) : base(i_ModelName, i_LicensePlate, i_EnergyType)
+        public Motorcycle(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
             /*m_LicenseType = i_LicenseType;
             m_EngineCapacity = i_EngineCapacity;*/
+            m_Type = i_EnergyType;
+            AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxMotorcycleTirePressure, k_MotorcycleWheelAmount);
+        }
+
+        public override float GetMaxWheelPressureAllow()
+        {
+            return k_MaxMotorcycleTirePressure;
         }
 
         public override List<ParameterWrapper> GetUniquePropertiesDataForVehicle()
         {
-            throw new NotImplementedException();
+            List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
+
+
+            parameterList.Add(new ParameterWrapper(typeof(eMotorcycleLicenseType), "License Type"));
+            parameterList.Add(new ParameterWrapper(typeof(int), "Engine Capacity"));
+
+            return parameterList;
         }
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            throw new NotImplementedException();
-        }
-
-        protected override void CreateTireList()
-        {
-            for(int i = 0; i < k_MotorcycleWheelAmount; i++)
+            SetEnergySource(m_Type);
+            foreach (ParameterWrapper parameter in i_Parameters)
             {
-                r_Tires.Add(new Tire("Bike Tire", k_MaxMotorcycleTirePressure));
+                if (parameter.Type == typeof(eMotorcycleLicenseType))
+                {
+                    m_LicenseType = (eMotorcycleLicenseType)parameter.Value;
+                }
+                else if (parameter.Type == typeof(int))
+                {
+                    m_EngineCapacity = (int)parameter.Value;
+                }
             }
         }
+
 
         protected override void SetEnergySource(EnergySource.eType i_Type)
         {

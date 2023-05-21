@@ -7,18 +7,18 @@ namespace Ex03.GarageLogic
 {
     public class ParameterWrapper
     {
-        public ParameterWrapper(Type i_ParameterType, string i_ParameterName)
+        public ParameterWrapper(Type i_Type, string i_Name)
         {
-            ParameterType = i_ParameterType;
-            ParameterName = i_ParameterName;
+            Type = i_Type;
+            Name = i_Name;
         }
 
-        public Type ParameterType
+        public Type Type
         {
             get;
         }
 
-        public string ParameterName
+        public string Name
         {
             get;
         }

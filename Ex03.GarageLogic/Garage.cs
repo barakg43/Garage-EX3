@@ -17,7 +17,7 @@ namespace Ex03.GarageLogic
 
         public enum eGarageStatus
         {
-            RepairInProgress,
+            RepairInProgress = 1,
             RepairDone,
             Payed,
         }

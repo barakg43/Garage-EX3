@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Ex03.GarageLogic;
 
 namespace Ex03.ConsoleUI
@@ -20,13 +21,16 @@ namespace Ex03.ConsoleUI
             Quit,
         }
 
+        private enum eBooleanValue
+        {
+            False = 0,
+            True 
+        } 
         public enum eIsFiltered
         {
             Filtered = 1,
             NotFiltered,
         }
-
-    
 
         public void PrintMainMenu()
         {
@@ -41,11 +45,39 @@ namespace Ex03.ConsoleUI
 # 6. Charge the vehicle                           #
 # 7. Print all vehicle details                    #
 # 8. Quit                                         #
-###################################################");
+###################################################
+");
         }
 
 
+        private static string addSpacesToCamelCaseWord(string i_InputCamelCaseWords)
+        {
+            string result;
+            StringBuilder outputStringBuilder;
 
+            if (string.IsNullOrEmpty(i_InputCamelCaseWords))
+            {
+                result= i_InputCamelCaseWords;
+            }
+            else
+            {
+                outputStringBuilder = new StringBuilder();
+                outputStringBuilder.Append(i_InputCamelCaseWords[0]);
+
+                for (int i = 1; i < i_InputCamelCaseWords.Length; i++)
+                {
+                    if (char.IsUpper(i_InputCamelCaseWords[i]) && (i + 1 < i_InputCamelCaseWords.Length && !char.IsUpper(i_InputCamelCaseWords[i + 1])))
+                    {
+                        outputStringBuilder.Append(' ');
+                    }
+
+                    outputStringBuilder.Append(i_InputCamelCaseWords[i]);
+                }
+                result= outputStringBuilder.ToString();
+            }
+
+            return result;
+        }
 
         public eMenuOptions GetAndCheckUserInputForMenuItem()
         {
@@ -70,8 +102,11 @@ namespace Ex03.ConsoleUI
             Console.WriteLine("Please enter license plate to the desire vehicle:");
             return Console.ReadLine();
         }
-    
-       
+
+        public void PrintException(Exception i_Exception)
+        {
+            Console.WriteLine(i_Exception.Message);
+        }
 
         private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName)
         {
@@ -94,31 +129,11 @@ namespace Ex03.ConsoleUI
 
         public bool GetUserInputIfWantFilteredVehicleList()
         {
-            Array enumValues = Enum.GetValues(typeof(eIsFiltered));
-            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
-            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+            int userInput = getValidEnumInputFromUser(typeof(eIsFiltered), "filter option");
 
-            foreach(eIsFiltered option in enumValues)
-            {
-                Console.WriteLine($"{(int)option}. {option}");
-            }
-            int userInput = getValidIntegerInRange(minValue, maxValue, "filter option");
             return (eIsFiltered)userInput == eIsFiltered.Filtered;
         }
         
-        public VehicleRepairRecord.eRepairStatus GetRepairStatusInput()
-        {
-            Array enumValues = Enum.GetValues(typeof(eIsFiltered));
-            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
-            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
-
-            foreach(eIsFiltered option in enumValues)
-            {
-                Console.WriteLine($"{(int)option}. {option}");
-            }
-            int userInput = getValidIntegerInRange(minValue, maxValue, "filter option");
-            return (eIsFiltered)userInput == eIsFiltered.Filtered;
-        }
         
         public VehicleRepairRecord.eRepairStatus GetRepairStatusInput()
         {
@@ -179,7 +194,7 @@ namespace Ex03.ConsoleUI
 
             for (int i = 0; i < enumValues.Length; i++)
             {
-                Console.WriteLine($"{(int)enumValues.GetValue(i)}. {enumValues.GetValue(i)}");
+                Console.WriteLine($"{(int)enumValues.GetValue(i)}. {addSpacesToCamelCaseWord(enumValues.GetValue(i).ToString())}");
             }
 
             userInput = getValidIntegerInRange(minValue, maxValue, i_ObjectName);
@@ -218,6 +233,48 @@ namespace Ex03.ConsoleUI
         {
             o_ElectricAmountToAdd =
                 getValidFloatNumberInputFromUser("Please enter the amount of electric to charge the vehicle");
+        }
+
+        public string GetInputStringFromUser(string i_Name)
+        {
+                Console.Write($"please enter {i_Name} for the vehicle:");
+
+                return Console.ReadLine();
+        }
+
+        public VehicleFactory.eAvailableVehicle GetVehicleTypeInputFromUser()
+        {
+            int userInput = getValidEnumInputFromUser(typeof(VehicleFactory.eAvailableVehicle), "vehicle type");
+
+            return (VehicleFactory.eAvailableVehicle)userInput;
+        }
+
+        public List<ParameterWrapper> SetProprietiesForVehicle(Vehicle i_Vehicle)
+        {
+            List<ParameterWrapper> vehicleProprietyList = i_Vehicle.GetUniquePropertiesDataForVehicle();
+
+            foreach (ParameterWrapper parameter in vehicleProprietyList)
+            {
+                if(parameter.Type.IsEnum)
+                {
+                    parameter.Value = getValidEnumInputFromUser(parameter.Type,parameter.Name);
+                }
+                else if(parameter.Type == typeof(int))
+                {
+                    parameter.Value = getValidIntegerInRange(int.MinValue, int.MaxValue, parameter.Name);
+                }
+                else if (parameter.Type == typeof(float))
+                {
+                    parameter.Value = getValidFloatNumberInputFromUser(parameter.Name);
+                }
+                else if (parameter.Type == typeof(bool))
+                {
+                    parameter.Value = (eBooleanValue)getValidEnumInputFromUser(typeof(eBooleanValue), parameter.Name)
+                                       == eBooleanValue.True;
+                }
+            }
+
+            return vehicleProprietyList;
         }
     }
 

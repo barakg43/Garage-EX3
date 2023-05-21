@@ -19,7 +19,6 @@ namespace Ex03.ConsoleUI
         {
             bool isUserWantToExit = false;
 
-            r_UserInterface.getValidFuelTypeFromUser();
             while (!isUserWantToExit)
             {
                 r_UserInterface.PrintMainMenu();
@@ -67,6 +66,7 @@ namespace Ex03.ConsoleUI
         private void chargeVehicle()
         {
             bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+
             if(vehicleInGarage)
             {
                 r_UserInterface.GetElectricAmountToCharge(out float amountToCharge);
@@ -88,7 +88,7 @@ namespace Ex03.ConsoleUI
                 }
                 catch(Exception e)
                 {
-                    //print exception
+                    r_UserInterface.PrintException(e);
                 }
             }
             
@@ -131,8 +131,10 @@ namespace Ex03.ConsoleUI
 
         private bool getLicensePlateIfVehicleInGarage(out string o_LicensePlate)
         {
+            bool vehicleInGarage;
+
             o_LicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
-            bool vehicleInGarage = r_Garage.IsVehicleExist(o_LicensePlate);
+            vehicleInGarage = r_Garage.IsVehicleExist(o_LicensePlate);
             if(!vehicleInGarage)
             {
                 r_UserInterface.PrintVehicleNotInGarage(o_LicensePlate);
@@ -170,24 +172,29 @@ namespace Ex03.ConsoleUI
         private void enterVehicleToGarage()
         {
             string vehicleLicensePlate = r_UserInterface.GetLicensePlateInputFromUser();
-            const bool v_VehicleIsExistInGarage = true;
-
-            if (r_Garage.IsVehicleExist(vehicleLicensePlate))
+            bool isVehicleIsExistInGarage = r_Garage.IsVehicleExist(vehicleLicensePlate);
+            if (isVehicleIsExistInGarage)
             {
-                r_UserInterface.PrintVehicleExistence(vehicleLicensePlate, v_VehicleIsExistInGarage);
+                r_UserInterface.PrintVehicleExistence(vehicleLicensePlate, isVehicleIsExistInGarage);
             }
             else
             {
-                //TODO: complete with vehicleFactory
+                createNewVehicle(vehicleLicensePlate);
             }
-
-
-
         }
-       
-        
 
- 
- 
+
+        private void createNewVehicle(string i_LicensePlate)
+        {
+            VehicleFactory.eAvailableVehicle vehicleType = r_UserInterface.GetVehicleTypeInputFromUser();
+            string modelName = r_UserInterface.GetInputStringFromUser("model name");
+            string wheelManufacturer = r_UserInterface.GetInputStringFromUser("Wheel manufacturer");
+            Vehicle vehicle = VehicleFactory.CreateVehicle(vehicleType, modelName, i_LicensePlate, wheelManufacturer);
+            List<ParameterWrapper> proprietyList = r_UserInterface.SetProprietiesForVehicle(vehicle);
+
+            vehicle.SetUniquePropertiesDataForVehicle(proprietyList);
+        }
+
+
     }
 }
