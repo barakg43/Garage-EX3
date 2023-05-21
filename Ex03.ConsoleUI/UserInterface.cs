@@ -20,6 +20,12 @@ namespace Ex03.ConsoleUI
             Quit,
         }
 
+        public enum eIsFiltered
+        {
+            Filtered = 1,
+            NotFiltered,
+        }
+
     
 
         public void PrintMainMenu()
@@ -86,20 +92,36 @@ namespace Ex03.ConsoleUI
             return userInput;
         }
 
-        
-        public VehicleRepairRecord.eRepairStatus GetRepairStatusInputToFilterList()
+        public bool GetUserInputIfWantFilteredVehicleList()
         {
-            Array enumValues = Enum.GetValues(typeof(VehicleRepairRecord.eRepairStatus));
+            Array enumValues = Enum.GetValues(typeof(eIsFiltered));
             int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
             int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
 
-            foreach (VehicleRepairRecord.eRepairStatus repairStatus in enumValues)
+            foreach(eIsFiltered option in enumValues)
             {
-                Console.WriteLine($"{(int)repairStatus}. {repairStatus}");
+                Console.WriteLine($"{(int)option}. {option}");
             }
-            int userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
+            int userInput = getValidIntegerInRange(minValue, maxValue, "filter option");
+            return (eIsFiltered)userInput == eIsFiltered.Filtered;
+        }
+        
+        public VehicleRepairRecord.eRepairStatus GetRepairStatusInput()
+        {
+            int userInput = getValidEnumInputFromUser(typeof(VehicleRepairRecord.eRepairStatus), "repair status");
 
             return (VehicleRepairRecord.eRepairStatus)userInput;
+            // Array enumValues = Enum.GetValues(typeof(VehicleRepairRecord.eRepairStatus));
+            // int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            // int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+            //
+            // foreach (VehicleRepairRecord.eRepairStatus repairStatus in enumValues)
+            // {
+            //     Console.WriteLine($"{(int)repairStatus}. {repairStatus}");
+            // }
+            // int userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
+            //
+            // return (VehicleRepairRecord.eRepairStatus)userInput;
         }
         public void PrintAllElementsInArray<T>(List<T> i_ElementArray)
         {
@@ -111,20 +133,45 @@ namespace Ex03.ConsoleUI
 
         private eFuelType getValidFuelTypeFromUser()
         {
-            Array enumValues = Enum.GetValues(typeof(eFuelType));
+
+            int userInput = getValidEnumInputFromUser(typeof(eFuelType), "fuel type");
+
+            return (eFuelType)userInput;
+            // Array enumValues = Enum.GetValues(typeof(eFuelType));
+            // int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            // int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+            //
+            // foreach (eFuelType fuelType in enumValues)
+            // {
+            //     Console.WriteLine($"{(int)fuelType}. {fuelType}");
+            // }
+            //
+            // int userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
+            //
+            // return (eFuelType)userInput;
+        }
+
+        private int getValidEnumInputFromUser(Type i_EnumType,String i_ObjectName)
+        {
+            int userInput;
+
+            if (!i_EnumType.IsEnum)
+            {
+                throw new ArgumentException("type is not enum type");
+            }
+            Array enumValues = Enum.GetValues(i_EnumType);
             int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
             int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
 
-            foreach (eFuelType fuelType in enumValues)
+            for (int i = 0; i < enumValues.Length; i++)
             {
-                Console.WriteLine($"{(int)fuelType}. {fuelType}");
+                Console.WriteLine($"{(int)enumValues.GetValue(i)}. {enumValues.GetValue(i)}");
             }
 
-            int userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
+            userInput = getValidIntegerInRange(minValue, maxValue, i_ObjectName);
 
-            return (eFuelType)userInput;
+            return userInput;
         }
-
         private float getValidFloatNumberInputFromUser(string i_InstructionMessage)
         {
             //bool isValidFloatNumber;

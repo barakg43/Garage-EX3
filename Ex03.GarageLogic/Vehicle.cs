@@ -17,8 +17,7 @@ namespace Ex03.GarageLogic
             r_ModelName = i_ModelName;
             r_LicensePlate = i_LicensePlate;
             r_Tires = new List<Tire>();
-            SetEnergySource(i_EnergyType);
-            CreateTireList();
+        
         }
 
         public void InflateAllTireToMaxPressure()
@@ -55,6 +54,9 @@ namespace Ex03.GarageLogic
 
         }
 
+
+        public abstract List<ParameterWrapper> GetUniquePropertiesDataForVehicle();
+        public abstract void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters);
         protected abstract void CreateTireList();
         protected abstract void SetEnergySource(EnergySource.eType i_Type);
         public float MaxEnergyAmountAllow => m_EnergySource.MaxEnergyAmount;

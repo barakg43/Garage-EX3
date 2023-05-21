@@ -31,10 +31,10 @@ namespace Ex03.GarageLogic
             return r_Vehicles.ContainsKey(i_VehicleLicensePlate);
         }
 
-        public List<string> GetVehiclePlateNumberListFilterByState(VehicleRepairRecord.eRepairStatus i_RepairStatus)
+        public List<string> GetVehiclePlateNumberListFilterByState(VehicleRepairRecord.eRepairStatus i_RepairStatus, bool i_IsFiltered)
         {
             List<string> filteredList = new List<string>();
-            if(i_RepairStatus == VehicleRepairRecord.eRepairStatus.NoFilter)
+            if(!i_IsFiltered)
             {
                 filteredList = r_Vehicles.Keys.ToList();
             }

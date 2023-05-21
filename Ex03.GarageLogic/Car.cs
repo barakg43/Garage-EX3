@@ -13,6 +13,8 @@ namespace Ex03.GarageLogic
         private const eFuelType k_FuelTypeForFuelCar = eFuelType.Octan95;
         private const ushort k_MaxFuelAmount = 46;
         private const float k_MaxBatteryCapacity = 5.2f;
+        private const string k_ColorPropriety = "CarColor";
+        private const string k_DoorAmountPropriety = "Amount Of Door";
         public enum eDoorAmount
         {
             TwoDoors = 2,
@@ -30,8 +32,26 @@ namespace Ex03.GarageLogic
         {
             //m_Color = i_Color;
             //r_CarDoorNumber = i_CarDoorAmount;
+            SetEnergySource(i_EnergyType);
+            CreateTireList();
         }
 
+
+        public override List<ParameterWrapper> GetUniquePropertiesDataForVehicle()
+        {
+            List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
+
+
+            parameterList.Add(new ParameterWrapper(typeof(eCarColor), k_ColorPropriety));
+            parameterList.Add(new ParameterWrapper(typeof(eDoorAmount), k_ColorPropriety));
+
+            return parameterList;
+        }
+
+        public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
+        {
+            throw new NotImplementedException();
+        }
 
         protected override void CreateTireList()
         {

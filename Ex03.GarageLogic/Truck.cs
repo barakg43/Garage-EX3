@@ -21,6 +21,16 @@ namespace Ex03.GarageLogic
             r_CargoVolume = i_CargoVolume;*/
         }
 
+        public override List<ParameterWrapper> GetUniquePropertiesDataForVehicle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void CreateTireList()
         {
             for (int i = 0; i < k_TruckWheelAmount; i++)

@@ -22,6 +22,16 @@ namespace Ex03.GarageLogic
             m_EngineCapacity = i_EngineCapacity;*/
         }
 
+        public override List<ParameterWrapper> GetUniquePropertiesDataForVehicle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void CreateTireList()
         {
             for(int i = 0; i < k_MotorcycleWheelAmount; i++)
