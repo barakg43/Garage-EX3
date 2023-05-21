@@ -77,7 +77,7 @@ $@"License Plate:{r_LicensePlate}
 Model Name:{r_ModelName}
 Engine:{m_EnergySource}
 Vehicle details:
-{VehicleToRepair}";
+{m_Type}";
 
             return details;
         
