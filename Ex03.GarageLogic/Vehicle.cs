@@ -68,5 +68,20 @@ namespace Ex03.GarageLogic
         }
         protected abstract void SetEnergySource(EnergySource.eType i_Type);
         public float MaxEnergyAmountAllow => m_EnergySource.MaxEnergyAmount;
+
+        public override string ToString()
+        {
+
+            string details = 
+$@"License Plate:{r_LicensePlate}
+Model Name:{r_ModelName}
+Engine:{m_EnergySource}
+Vehicle details:
+{VehicleToRepair}";
+
+            return details;
+        
+            return $", {nameof(r_LicensePlate)}: {r_LicensePlate}, {nameof(r_Tires)}: {r_Tires}, {nameof(m_EnergySource)}: {m_EnergySource}, {nameof(m_Type)}: {m_Type}, {nameof(ModelName)}: {ModelName}, {nameof(LicensePlate)}: {LicensePlate}, {nameof(Tires)}: {Tires}, {nameof(EnergySource)}: {EnergySource}, {nameof(MaxEnergyAmountAllow)}: {MaxEnergyAmountAllow}";
+        }
     }
 }
