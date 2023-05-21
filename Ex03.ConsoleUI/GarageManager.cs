@@ -115,7 +115,7 @@ namespace Ex03.ConsoleUI
 
             if(vehicleInGarage)
             {
-                VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();//different method for this?
+                VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInput();
                 r_Garage.ChangeVehicleStatus(licensePlate, repairStatus);
             }
         }
@@ -123,7 +123,7 @@ namespace Ex03.ConsoleUI
         private void changeVehicleStatus()
         {
             string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();
+            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInput();
 
             r_Garage.ChangeVehicleStatus(vehicleLicensePlate, repairStatus);
         }
@@ -155,8 +155,14 @@ namespace Ex03.ConsoleUI
         }
         private void showVehicleListInGarageFilterByStatus()
         {
-            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInputToFilterList();
-            List<string> vehicleListInGarage = r_Garage.GetVehiclePlateNumberListFilterByState(repairStatus);
+            bool isFiltered = r_UserInterface.GetUserInputIfWantFilteredVehicleList();
+            VehicleRepairRecord.eRepairStatus repairStatus = VehicleRepairRecord.eRepairStatus.InRepair;
+            if (isFiltered)
+            {
+                repairStatus = r_UserInterface.GetRepairStatusInput();
+            }
+
+            List<string> vehicleListInGarage = r_Garage.GetVehiclePlateNumberListFilterByState(repairStatus, isFiltered);
             r_UserInterface.PrintAllElementsInArray(vehicleListInGarage);
         }
 

@@ -8,8 +8,7 @@
         public string OwnerPhoneNumber { get; set; }
         public enum eRepairStatus
         {
-            NoFilter,
-            InRepair,
+            InRepair = 1,
             Repaired,
             Paid
         }
