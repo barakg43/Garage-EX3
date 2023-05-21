@@ -33,7 +33,8 @@
 $@"Owner name:{OwnerName}
 Owner Phone Number:{OwnerPhoneNumber}
 Vehicle repair stats:{RepairStatus}
-Vehicle details{VehicleToRepair}";
+Vehicle details:
+{VehicleToRepair}";
 
           return details;
         }
