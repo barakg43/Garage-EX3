@@ -108,6 +108,20 @@ namespace Ex03.ConsoleUI
         
         public VehicleRepairRecord.eRepairStatus GetRepairStatusInput()
         {
+            Array enumValues = Enum.GetValues(typeof(eIsFiltered));
+            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+
+            foreach(eIsFiltered option in enumValues)
+            {
+                Console.WriteLine($"{(int)option}. {option}");
+            }
+            int userInput = getValidIntegerInRange(minValue, maxValue, "filter option");
+            return (eIsFiltered)userInput == eIsFiltered.Filtered;
+        }
+        
+        public VehicleRepairRecord.eRepairStatus GetRepairStatusInput()
+        {
             int userInput = getValidEnumInputFromUser(typeof(VehicleRepairRecord.eRepairStatus), "repair status");
 
             return (VehicleRepairRecord.eRepairStatus)userInput;
