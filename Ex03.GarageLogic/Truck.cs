@@ -8,24 +8,50 @@ namespace Ex03.GarageLogic
     public class Truck : Vehicle
     {
         private const int k_TruckWheelAmount = 14;
-        private const int k_MaxTruckTirePressure = 26;
+        private const float k_MaxTruckTirePressure = 26.0f;
         private const eFuelType k_TruckFuelType = eFuelType.Soler;
         private const float k_TruckFuelCapacity = 135f;
 
         private bool m_IsTransportingDangerousMaterials;
-        private readonly float r_CargoVolume;
+        private float r_CargoVolume;
 
-        public Truck(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate) : base(i_ModelName, i_LicensePlate, i_EnergyType)
+        public Truck(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
             /*m_IsTransportingDangerousMaterials = i_IsTransportingDangerousMaterials;
             r_CargoVolume = i_CargoVolume;*/
+            m_Type = i_EnergyType;
+            AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxTruckTirePressure, k_TruckWheelAmount);
         }
 
-        protected override void CreateTireList()
+        public override float GetMaxWheelPressureAllow()
         {
-            for (int i = 0; i < k_TruckWheelAmount; i++)
+            return k_MaxTruckTirePressure;
+        }
+
+        public override List<ParameterWrapper> GetUniquePropertiesDataForVehicle()
+        {
+            List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
+
+            parameterList.Add(new ParameterWrapper(typeof(bool), "Is Transporting Dangerous Materials"));
+            parameterList.Add(new ParameterWrapper(typeof(float), "Cargo Volume"));
+
+            return parameterList;
+        }
+
+        public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
+        {
+            SetEnergySource(m_Type);
+            foreach (ParameterWrapper parameter in i_Parameters)
             {
-                r_Tires.Add(new Tire("Truck Tire", k_MaxTruckTirePressure));
+                if (parameter.Type == typeof(float))
+                {
+                    r_CargoVolume = (float)parameter.Value;
+                   
+                }
+                else if (parameter.Type == typeof(bool))
+                {
+                    m_IsTransportingDangerousMaterials = (bool)parameter.Value;
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Ex03.GarageLogic;
 
 namespace Ex03.ConsoleUI
@@ -20,7 +21,16 @@ namespace Ex03.ConsoleUI
             Quit,
         }
 
-    
+        private enum eBooleanValue
+        {
+            False = 0,
+            True 
+        } 
+        public enum eIsFiltered
+        {
+            Filtered = 1,
+            NotFiltered,
+        }
 
         public void PrintMainMenu()
         {
@@ -35,11 +45,39 @@ namespace Ex03.ConsoleUI
 # 6. Charge the vehicle                           #
 # 7. Print all vehicle details                    #
 # 8. Quit                                         #
-###################################################");
+###################################################
+");
         }
 
 
+        private static string addSpacesToCamelCaseWord(string i_InputCamelCaseWords)
+        {
+            string result;
+            StringBuilder outputStringBuilder;
 
+            if (string.IsNullOrEmpty(i_InputCamelCaseWords))
+            {
+                result= i_InputCamelCaseWords;
+            }
+            else
+            {
+                outputStringBuilder = new StringBuilder();
+                outputStringBuilder.Append(i_InputCamelCaseWords[0]);
+
+                for (int i = 1; i < i_InputCamelCaseWords.Length; i++)
+                {
+                    if (char.IsUpper(i_InputCamelCaseWords[i]) && (i + 1 < i_InputCamelCaseWords.Length && !char.IsUpper(i_InputCamelCaseWords[i + 1])))
+                    {
+                        outputStringBuilder.Append(' ');
+                    }
+
+                    outputStringBuilder.Append(i_InputCamelCaseWords[i]);
+                }
+                result= outputStringBuilder.ToString();
+            }
+
+            return result;
+        }
 
         public eMenuOptions GetAndCheckUserInputForMenuItem()
         {
@@ -64,8 +102,11 @@ namespace Ex03.ConsoleUI
             Console.WriteLine("Please enter license plate to the desire vehicle:");
             return Console.ReadLine();
         }
-    
-       
+
+        public void PrintException(Exception i_Exception)
+        {
+            Console.WriteLine(i_Exception.Message);
+        }
 
         private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName)
         {
@@ -86,20 +127,30 @@ namespace Ex03.ConsoleUI
             return userInput;
         }
 
-        
-        public VehicleRepairRecord.eRepairStatus GetRepairStatusInputToFilterList()
+        public bool GetUserInputIfWantFilteredVehicleList()
         {
-            Array enumValues = Enum.GetValues(typeof(VehicleRepairRecord.eRepairStatus));
-            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
-            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+            int userInput = getValidEnumInputFromUser(typeof(eIsFiltered), "filter option");
 
-            foreach (VehicleRepairRecord.eRepairStatus repairStatus in enumValues)
-            {
-                Console.WriteLine($"{(int)repairStatus}. {repairStatus}");
-            }
-            int userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
+            return (eIsFiltered)userInput == eIsFiltered.Filtered;
+        }
+        
+        
+        public VehicleRepairRecord.eRepairStatus GetRepairStatusInput()
+        {
+            int userInput = getValidEnumInputFromUser(typeof(VehicleRepairRecord.eRepairStatus), "repair status");
 
             return (VehicleRepairRecord.eRepairStatus)userInput;
+            // Array enumValues = Enum.GetValues(typeof(VehicleRepairRecord.eRepairStatus));
+            // int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            // int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+            //
+            // foreach (VehicleRepairRecord.eRepairStatus repairStatus in enumValues)
+            // {
+            //     Console.WriteLine($"{(int)repairStatus}. {repairStatus}");
+            // }
+            // int userInput = getValidIntegerInRange(minValue, maxValue, "repair status");
+            //
+            // return (VehicleRepairRecord.eRepairStatus)userInput;
         }
         public void PrintAllElementsInArray<T>(List<T> i_ElementArray)
         {
@@ -111,20 +162,45 @@ namespace Ex03.ConsoleUI
 
         private eFuelType getValidFuelTypeFromUser()
         {
-            Array enumValues = Enum.GetValues(typeof(eFuelType));
+
+            int userInput = getValidEnumInputFromUser(typeof(eFuelType), "fuel type");
+
+            return (eFuelType)userInput;
+            // Array enumValues = Enum.GetValues(typeof(eFuelType));
+            // int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+            // int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+            //
+            // foreach (eFuelType fuelType in enumValues)
+            // {
+            //     Console.WriteLine($"{(int)fuelType}. {fuelType}");
+            // }
+            //
+            // int userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
+            //
+            // return (eFuelType)userInput;
+        }
+
+        private int getValidEnumInputFromUser(Type i_EnumType,String i_ObjectName)
+        {
+            int userInput;
+
+            if (!i_EnumType.IsEnum)
+            {
+                throw new ArgumentException("type is not enum type");
+            }
+            Array enumValues = Enum.GetValues(i_EnumType);
             int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
             int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
 
-            foreach (eFuelType fuelType in enumValues)
+            for (int i = 0; i < enumValues.Length; i++)
             {
-                Console.WriteLine($"{(int)fuelType}. {fuelType}");
+                Console.WriteLine($"{(int)enumValues.GetValue(i)}. {addSpacesToCamelCaseWord(enumValues.GetValue(i).ToString())}");
             }
 
-            int userInput = getValidIntegerInRange(minValue, maxValue, "fuel type");
+            userInput = getValidIntegerInRange(minValue, maxValue, i_ObjectName);
 
-            return (eFuelType)userInput;
+            return userInput;
         }
-
         private float getValidFloatNumberInputFromUser(string i_InstructionMessage)
         {
             //bool isValidFloatNumber;
@@ -157,6 +233,48 @@ namespace Ex03.ConsoleUI
         {
             o_ElectricAmountToAdd =
                 getValidFloatNumberInputFromUser("Please enter the amount of electric to charge the vehicle");
+        }
+
+        public string GetInputStringFromUser(string i_Name)
+        {
+                Console.Write($"please enter {i_Name} for the vehicle:");
+
+                return Console.ReadLine();
+        }
+
+        public VehicleFactory.eAvailableVehicle GetVehicleTypeInputFromUser()
+        {
+            int userInput = getValidEnumInputFromUser(typeof(VehicleFactory.eAvailableVehicle), "vehicle type");
+
+            return (VehicleFactory.eAvailableVehicle)userInput;
+        }
+
+        public List<ParameterWrapper> SetProprietiesForVehicle(Vehicle i_Vehicle)
+        {
+            List<ParameterWrapper> vehicleProprietyList = i_Vehicle.GetUniquePropertiesDataForVehicle();
+
+            foreach (ParameterWrapper parameter in vehicleProprietyList)
+            {
+                if(parameter.Type.IsEnum)
+                {
+                    parameter.Value = getValidEnumInputFromUser(parameter.Type,parameter.Name);
+                }
+                else if(parameter.Type == typeof(int))
+                {
+                    parameter.Value = getValidIntegerInRange(int.MinValue, int.MaxValue, parameter.Name);
+                }
+                else if (parameter.Type == typeof(float))
+                {
+                    parameter.Value = getValidFloatNumberInputFromUser(parameter.Name);
+                }
+                else if (parameter.Type == typeof(bool))
+                {
+                    parameter.Value = (eBooleanValue)getValidEnumInputFromUser(typeof(eBooleanValue), parameter.Name)
+                                       == eBooleanValue.True;
+                }
+            }
+
+            return vehicleProprietyList;
         }
     }
 

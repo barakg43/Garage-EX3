@@ -9,27 +9,27 @@ namespace Ex03.GarageLogic
     {
         private readonly string r_ModelName;
         private readonly string r_LicensePlate;
-        protected readonly List<Tire> r_Tires;
+        protected readonly List<Wheel> r_Tires;
         private EnergySource m_EnergySource;
+        protected EnergySource.eType m_Type;
 
-        public Vehicle( string i_ModelName, string i_LicensePlate, EnergySource.eType i_EnergyType)
+        public Vehicle( string i_ModelName, string i_LicensePlate)
         {
             r_ModelName = i_ModelName;
             r_LicensePlate = i_LicensePlate;
-            r_Tires = new List<Tire>();
-            SetEnergySource(i_EnergyType);
-            CreateTireList();
+            r_Tires = new List<Wheel>();
         }
 
         public void InflateAllTireToMaxPressure()
         {
-            foreach(Tire singleTire in r_Tires)
+            foreach(Wheel singleTire in r_Tires)
             {
                 singleTire.InflateTireToMaxPressure();
             }
-
         }
 
+        public abstract float GetMaxWheelPressureAllow();
+       
         public string ModelName
         {
             get => r_ModelName;
@@ -38,7 +38,7 @@ namespace Ex03.GarageLogic
         {
             get => r_LicensePlate;
         }
-        public List<Tire> Tires => r_Tires;
+        public List<Wheel> Tires => r_Tires;
 
         public EnergySource EnergySource
         {
@@ -48,14 +48,24 @@ namespace Ex03.GarageLogic
 
         public void InflateAirPressureToAllTires(float i_AirPressureToAdd)
         {
-            foreach (Tire singleTire in r_Tires)
+            foreach (Wheel singleTire in r_Tires)
             {
                 singleTire.InflateTire(i_AirPressureToAdd);
             }
 
         }
 
-        protected abstract void CreateTireList();
+
+        public abstract List<ParameterWrapper> GetUniquePropertiesDataForVehicle();
+        public abstract void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters);
+
+        protected void AssembleWheelsToVehicle(string i_WheelManufacturer, float i_MaximumTirePressure,int i_WheelAmount)
+        {
+            for (int i = 0; i < i_WheelAmount; i++)
+            {
+                r_Tires.Add(new Wheel(i_WheelManufacturer, i_MaximumTirePressure));
+            }
+        }
         protected abstract void SetEnergySource(EnergySource.eType i_Type);
         public float MaxEnergyAmountAllow => m_EnergySource.MaxEnergyAmount;
     }

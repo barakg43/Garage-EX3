@@ -18,7 +18,7 @@ namespace Ex03.GarageLogic
 
         public enum eType
         {
-            Electric,
+            Electric = 1,
             Fuel
         }
         public float CurrentEnergyAmount
