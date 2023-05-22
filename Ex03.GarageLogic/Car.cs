@@ -78,5 +78,15 @@ namespace Ex03.GarageLogic
                 EnergySource = new Fuel(k_MaxFuelAmount, k_FuelTypeForFuelCar);
             }
         }
+
+        public override string ToString()
+        {
+            return $@"Car::
+{base.ToString()}
+Color: {m_Color}
+Door Amount: {(int)m_CarDoorNumber}
+Wheel Amount:{k_WheelAmount}";
+
+        }
     }
 }

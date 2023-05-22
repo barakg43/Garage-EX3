@@ -9,7 +9,7 @@ namespace Ex03.GarageLogic
     {
         private readonly string r_ModelName;
         private readonly string r_LicensePlate;
-        protected readonly List<Wheel> r_Tires;
+        protected readonly List<Wheel> r_Wheels;
         private EnergySource m_EnergySource;
         protected EnergySource.eType m_Type;
 
@@ -17,12 +17,12 @@ namespace Ex03.GarageLogic
         {
             r_ModelName = i_ModelName;
             r_LicensePlate = i_LicensePlate;
-            r_Tires = new List<Wheel>();
+            r_Wheels = new List<Wheel>();
         }
 
         public void InflateAllTireToMaxPressure()
         {
-            foreach(Wheel singleTire in r_Tires)
+            foreach(Wheel singleTire in r_Wheels)
             {
                 singleTire.InflateTireToMaxPressure();
             }
@@ -38,7 +38,7 @@ namespace Ex03.GarageLogic
         {
             get => r_LicensePlate;
         }
-        public List<Wheel> Tires => r_Tires;
+        public List<Wheel> Wheels => r_Wheels;
 
         public EnergySource EnergySource
         {
@@ -48,7 +48,7 @@ namespace Ex03.GarageLogic
 
         public void InflateAirPressureToAllTires(float i_AirPressureToAdd)
         {
-            foreach (Wheel singleTire in r_Tires)
+            foreach (Wheel singleTire in r_Wheels)
             {
                 singleTire.InflateTire(i_AirPressureToAdd);
             }
@@ -63,25 +63,35 @@ namespace Ex03.GarageLogic
         {
             for (int i = 0; i < i_WheelAmount; i++)
             {
-                r_Tires.Add(new Wheel(i_WheelManufacturer, i_MaximumTirePressure));
+                r_Wheels.Add(new Wheel(i_WheelManufacturer, i_MaximumTirePressure));
             }
         }
         protected abstract void SetEnergySource(EnergySource.eType i_Type);
         public float MaxEnergyAmountAllow => m_EnergySource.MaxEnergyAmount;
 
+        private string getWheelsDetails()
+        {
+            int wheelNumber = 1;
+            StringBuilder allWheelsDetails = new StringBuilder();
+
+            foreach(Wheel wheel in Wheels)
+            {
+                allWheelsDetails.AppendFormat("{0}. {1}{2}",wheelNumber++,wheel, Environment.NewLine);
+            }
+
+            return allWheelsDetails.ToString();
+        }
+
+
         public override string ToString()
         {
-
-            string details = 
-$@"License Plate:{r_LicensePlate}
+            string details = $@"License Plate:{r_LicensePlate}
 Model Name:{r_ModelName}
-Engine:{m_EnergySource}
-Vehicle details:
-{m_Type}";
+Wheels:
+{getWheelsDetails()}
+Engine:{m_EnergySource}";
 
             return details;
-        
-            return $", {nameof(r_LicensePlate)}: {r_LicensePlate}, {nameof(r_Tires)}: {r_Tires}, {nameof(m_EnergySource)}: {m_EnergySource}, {nameof(m_Type)}: {m_Type}, {nameof(ModelName)}: {ModelName}, {nameof(LicensePlate)}: {LicensePlate}, {nameof(Tires)}: {Tires}, {nameof(EnergySource)}: {EnergySource}, {nameof(MaxEnergyAmountAllow)}: {MaxEnergyAmountAllow}";
         }
     }
 }

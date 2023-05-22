@@ -56,6 +56,8 @@ namespace Ex03.ConsoleUI
         private void printAllVehicleDetailsInGarage()
         {
             List<VehicleRepairRecord> allCVehicleRepairRecords = r_Garage.GetAllVehicleRecords();
+
+            r_UserInterface.PrintAllElementsInArray(allCVehicleRepairRecords);
         }
 
         private void chargeVehicleIfInGarage()
@@ -74,7 +76,6 @@ namespace Ex03.ConsoleUI
             }
             
         }
-
 
         private void fuelVehicle()
         {
@@ -97,11 +98,11 @@ namespace Ex03.ConsoleUI
         private void inflateAllTiresIfVehicleExits()
         {
             bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+
             if (vehicleInGarage)
             {
                 r_Garage.InflateVehicleTiresToMaxPressure(licensePlate);
             }
-
         }
 
         private void inflateAllVehicleTires()
@@ -176,23 +177,35 @@ namespace Ex03.ConsoleUI
             if (isVehicleIsExistInGarage)
             {
                 r_UserInterface.PrintVehicleExistence(vehicleLicensePlate, isVehicleIsExistInGarage);
+                r_UserInterface.PrintMassage($"Vehicle status set to'{VehicleRepairRecord.eRepairStatus.InRepair}'");
             }
             else
             {
                 createNewVehicle(vehicleLicensePlate);
+                r_UserInterface.PrintMassage($"Successfully enter new vehicle to Garage ");
             }
         }
 
 
         private void createNewVehicle(string i_LicensePlate)
         {
+            string ownerName, ownerPhoneNumber;
+            VehicleRepairRecord newVehicle;
             VehicleFactory.eAvailableVehicle vehicleType = r_UserInterface.GetVehicleTypeInputFromUser();
             string modelName = r_UserInterface.GetInputStringFromUser("model name");
             string wheelManufacturer = r_UserInterface.GetInputStringFromUser("Wheel manufacturer");
             Vehicle vehicle = VehicleFactory.CreateVehicle(vehicleType, modelName, i_LicensePlate, wheelManufacturer);
             List<ParameterWrapper> proprietyList = r_UserInterface.SetProprietiesForVehicle(vehicle);
+            float tireAirPressure = r_UserInterface.GetAirPressureInput(vehicle.GetMaxWheelPressureAllow());
 
+            vehicle.InflateAirPressureToAllTires(tireAirPressure);
             vehicle.SetUniquePropertiesDataForVehicle(proprietyList);
+            ownerName = r_UserInterface.GetInputStringFromUser("Owner name");
+            ownerPhoneNumber = r_UserInterface.GetInputStringFromUser("Owner phone number");
+            newVehicle = new VehicleRepairRecord(vehicle, ownerName, ownerPhoneNumber);
+            r_Garage.AddVehicle(newVehicle);
+
+ 
         }
 
 

@@ -17,8 +17,6 @@ namespace Ex03.GarageLogic
 
         public Truck(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
-            /*m_IsTransportingDangerousMaterials = i_IsTransportingDangerousMaterials;
-            r_CargoVolume = i_CargoVolume;*/
             m_Type = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxTruckTirePressure, k_TruckWheelAmount);
         }
