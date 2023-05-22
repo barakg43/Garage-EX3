@@ -16,5 +16,10 @@ namespace Ex03.GarageLogic
         {
             AddEnergyToSource(i_ChargingTimeToAdd);
         }
+
+        public override string ToString()
+        {
+            return $"Electric:: Battery Capacity: {MaxEnergyAmount} Hours| Left Energy: {GetEnergyPercentRemaining()}% ";
+        }
     }
 }

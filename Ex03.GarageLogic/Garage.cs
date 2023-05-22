@@ -33,13 +33,14 @@ namespace Ex03.GarageLogic
 
         public List<string> GetVehiclePlateNumberListFilterByState(VehicleRepairRecord.eRepairStatus i_RepairStatus, bool i_IsFiltered)
         {
-            List<string> filteredList = new List<string>();
+            List<string> filteredList;
             if(!i_IsFiltered)
             {
                 filteredList = r_Vehicles.Keys.ToList();
             }
             else
             {
+                filteredList = new List<string>();
                 foreach (KeyValuePair<string, VehicleRepairRecord> licensePlateAndVehicle in r_Vehicles)
                 {
                     if (licensePlateAndVehicle.Value.RepairStatus == i_RepairStatus)
@@ -60,6 +61,11 @@ namespace Ex03.GarageLogic
 
         public void InflateVehicleTiresToMaxPressure(string i_VehicleLicensePlate)
         {
+            if(!IsVehicleExist(i_VehicleLicensePlate))
+            {
+                throw new ArgumentException("Vehicle not exist in garage");
+            }
+
             r_Vehicles[i_VehicleLicensePlate].VehicleToRepair.InflateAllTireToMaxPressure();
         }
 
@@ -92,7 +98,7 @@ namespace Ex03.GarageLogic
 
         public List<VehicleRepairRecord> GetAllVehicleRecords()
         {
-            throw new NotImplementedException();
+            return r_Vehicles.Values.ToList();
         }
     }
 }

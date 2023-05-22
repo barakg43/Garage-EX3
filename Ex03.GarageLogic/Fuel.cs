@@ -30,6 +30,10 @@ namespace Ex03.GarageLogic
             AddEnergyToSource(i_FuelAmountToAdd);
         }
 
+        public override string ToString()
+        {
+            return $"Fuel:: Type: {r_FuelType} | Tank Capacity: {MaxEnergyAmount}L | Level: {GetEnergyPercentRemaining()}% ";
+        }
     }
 
     

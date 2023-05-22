@@ -154,9 +154,16 @@ namespace Ex03.ConsoleUI
         }
         public void PrintAllElementsInArray<T>(List<T> i_ElementArray)
         {
-            foreach(T element in i_ElementArray)
+            if(i_ElementArray == null || i_ElementArray.Count == 0)
             {
-                Console.WriteLine(element.ToString());
+                Console.WriteLine("No Element to print");
+            }
+            else
+            {
+                foreach (T element in i_ElementArray)
+                {
+                    Console.WriteLine(element.ToString());
+                }
             }
         }
 
@@ -275,6 +282,24 @@ namespace Ex03.ConsoleUI
             }
 
             return vehicleProprietyList;
+        }
+
+        public float GetAirPressureInput(float i_MaxWheelPressureAllow)
+        {
+            float airPressureInput =
+                getValidFloatNumberInputFromUser($"Please enter the amount of air pressure to inflate the tires in vehicle (0-{i_MaxWheelPressureAllow})");
+
+            while (!float.TryParse(Console.ReadLine(), out airPressureInput))
+            {
+                Console.Write(k_InvalidInputMsg);
+            }
+
+            return airPressureInput;
+        }
+
+        public void PrintMassage(string i_Massage)
+        {
+            Console.WriteLine(i_Massage);
         }
     }
 

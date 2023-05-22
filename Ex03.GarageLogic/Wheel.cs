@@ -41,5 +41,14 @@ namespace Ex03.GarageLogic
         {
             m_CurrentTirePressure = r_MaximumTirePressure;
         }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "Manufacturer Name:{0}|Maximum Tire Pressure Allow:{1} |CurrentTirePressure:{2}",
+                r_ManufacturerName,
+                r_MaximumTirePressure,
+                m_CurrentTirePressure);
+        }
     }
 }
