@@ -20,7 +20,7 @@ namespace Ex03.GarageLogic
         {
             /*m_LicenseType = i_LicenseType;
             m_EngineCapacity = i_EngineCapacity;*/
-            m_Type = i_EnergyType;
+            m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxMotorcycleTirePressure, k_MotorcycleWheelAmount);
         }
 
@@ -42,7 +42,7 @@ namespace Ex03.GarageLogic
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            SetEnergySource(m_Type);
+            SetEnergySource(m_EnergyType);
             foreach (ParameterWrapper parameter in i_Parameters)
             {
                 if (parameter.Type == typeof(eMotorcycleLicenseType))

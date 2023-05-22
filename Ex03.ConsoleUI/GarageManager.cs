@@ -72,7 +72,14 @@ namespace Ex03.ConsoleUI
             if(vehicleInGarage)
             {
                 r_UserInterface.GetElectricAmountToCharge(out float amountToCharge);
-                r_Garage.ChargeVehicleInGarage(licensePlate, amountToCharge);
+                try
+                {
+                    r_Garage.ChargeVehicleInGarage(licensePlate, amountToCharge);
+                }
+                catch(Exception e)
+                {
+                    r_UserInterface.PrintMassage(e.Message);
+                }
             }
             
         }
@@ -191,15 +198,17 @@ namespace Ex03.ConsoleUI
         {
             string ownerName, ownerPhoneNumber;
             VehicleRepairRecord newVehicle;
+            eFuelType fuelType;
+            float energyToFill;
             VehicleFactory.eAvailableVehicle vehicleType = r_UserInterface.GetVehicleTypeInputFromUser();
             string modelName = r_UserInterface.GetInputStringFromUser("model name");
             string wheelManufacturer = r_UserInterface.GetInputStringFromUser("Wheel manufacturer");
             Vehicle vehicle = VehicleFactory.CreateVehicle(vehicleType, modelName, i_LicensePlate, wheelManufacturer);
             List<ParameterWrapper> proprietyList = r_UserInterface.SetProprietiesForVehicle(vehicle);
-            float tireAirPressure = r_UserInterface.GetAirPressureInput(vehicle.GetMaxWheelPressureAllow());
-
-            vehicle.InflateAirPressureToAllTires(tireAirPressure);
             vehicle.SetUniquePropertiesDataForVehicle(proprietyList);
+            float tireAirPressure = r_UserInterface.GetAirPressureInput(vehicle.GetMaxWheelPressureAllow());
+            vehicle.InflateAirPressureToAllTires(tireAirPressure);
+            initialVehicleEnergySourceFilling(vehicle);
             ownerName = r_UserInterface.GetInputStringFromUser("Owner name");
             ownerPhoneNumber = r_UserInterface.GetInputStringFromUser("Owner phone number");
             newVehicle = new VehicleRepairRecord(vehicle, ownerName, ownerPhoneNumber);
@@ -207,6 +216,29 @@ namespace Ex03.ConsoleUI
 
  
         }
+
+        private void initialVehicleEnergySourceFilling(Vehicle i_Vehicle)
+        {
+            float energyToFill;
+
+            if (i_Vehicle.EnergyType == EnergySource.eType.Fuel)
+            {
+                energyToFill = r_UserInterface.GetInitialEnergyAmount(
+                    i_Vehicle.EnergySource.MaxEnergyAmount,
+                    "Fuel",
+                    "liter");
+            }
+            else
+            {
+                energyToFill = r_UserInterface.GetInitialEnergyAmount(
+                    i_Vehicle.EnergySource.MaxEnergyAmount,
+                    "Charge",
+                    "hours");
+            }
+
+            i_Vehicle.EnergySource.CurrentEnergyAmount = energyToFill;
+        }
+
 
 
     }

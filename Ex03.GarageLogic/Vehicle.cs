@@ -11,7 +11,7 @@ namespace Ex03.GarageLogic
         private readonly string r_LicensePlate;
         protected readonly List<Wheel> r_Wheels;
         private EnergySource m_EnergySource;
-        protected EnergySource.eType m_Type;
+        protected EnergySource.eType m_EnergyType;
 
         public Vehicle( string i_ModelName, string i_LicensePlate)
         {
@@ -44,6 +44,11 @@ namespace Ex03.GarageLogic
         {
             get => m_EnergySource;
             protected set => m_EnergySource = value;
+        }
+
+        public EnergySource.eType EnergyType
+        {
+            get => m_EnergyType;
         }
 
         public void InflateAirPressureToAllTires(float i_AirPressureToAdd)

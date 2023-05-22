@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Ex03.GarageLogic;
 
@@ -8,6 +9,7 @@ namespace Ex03.ConsoleUI
     public class UserInterface
     {
         private const string k_InvalidInputMsg = "The input you entered is invalid. Please try again: ";
+        private const float k_MinutesInHour = 60f;
 
         public enum eMenuOptions
         {
@@ -81,7 +83,7 @@ namespace Ex03.ConsoleUI
 
         public eMenuOptions GetAndCheckUserInputForMenuItem()
         {
-            int userInput = getValidIntegerInRange((int)eMenuOptions.EnterVehicleToGarage, (int)eMenuOptions.Quit,"menu option");
+            int userInput = getValidIntegerInRange((int)eMenuOptions.EnterVehicleToGarage, (int)eMenuOptions.Quit,"menu option", typeof(eMenuOptions));
             return (eMenuOptions)userInput;
         }
 
@@ -108,7 +110,7 @@ namespace Ex03.ConsoleUI
             Console.WriteLine(i_Exception.Message);
         }
 
-        private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName)
+        private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName, Type i_ObjectType)
         {
             bool inputIsInvalid = true;
             int userInput = 0;
@@ -117,7 +119,14 @@ namespace Ex03.ConsoleUI
             while (inputIsInvalid)
             {
                 int.TryParse(Console.ReadLine(), out userInput);
-                inputIsInvalid = !Enum.IsDefined(typeof(eMenuOptions), userInput);
+                if(i_ObjectType.IsEnum)
+                {
+                    inputIsInvalid = !Enum.IsDefined(i_ObjectType, userInput);
+                }
+                else
+                {
+                    inputIsInvalid = userInput < i_MinValue || userInput > i_MaxValue;
+                }
                 if(inputIsInvalid)
                 {
                     Console.WriteLine(k_InvalidInputMsg);
@@ -126,6 +135,28 @@ namespace Ex03.ConsoleUI
 
             return userInput;
         }
+
+        private float getValidFloatInputInRange(float i_MinValue, float i_MaxValue, string i_ObjectName, string i_Unit)
+        {
+            bool inputIsInvalid = true;
+            float userInput = 0f;
+
+            Console.WriteLine($"Please select a {i_ObjectName} between {i_MinValue} and {i_MaxValue} in {i_Unit}");
+            while (inputIsInvalid)
+            {
+                float.TryParse(Console.ReadLine(), out userInput);
+                inputIsInvalid = userInput < i_MinValue || userInput > i_MaxValue;
+
+                if (inputIsInvalid)
+                {
+                    Console.WriteLine(k_InvalidInputMsg);
+                }
+            }
+
+            return userInput;
+        }
+
+        
 
         public bool GetUserInputIfWantFilteredVehicleList()
         {
@@ -187,7 +218,7 @@ namespace Ex03.ConsoleUI
             // return (eFuelType)userInput;
         }
 
-        private int getValidEnumInputFromUser(Type i_EnumType,String i_ObjectName)
+        private int getValidEnumInputFromUser(Type i_EnumType, string i_ObjectName)
         {
             int userInput;
 
@@ -204,7 +235,7 @@ namespace Ex03.ConsoleUI
                 Console.WriteLine($"{(int)enumValues.GetValue(i)}. {addSpacesToCamelCaseWord(enumValues.GetValue(i).ToString())}");
             }
 
-            userInput = getValidIntegerInRange(minValue, maxValue, i_ObjectName);
+            userInput = getValidIntegerInRange(minValue, maxValue, i_ObjectName, i_EnumType);
 
             return userInput;
         }
@@ -228,6 +259,12 @@ namespace Ex03.ConsoleUI
 
             return userInput;
         }
+
+        public float GetInitialEnergyAmount(float i_MaxEnergy, string i_ObjectType, string i_Unit)
+        {
+            return getValidFloatInputInRange(0, i_MaxEnergy, i_ObjectType, i_Unit);
+        }
+
         public void GetFuelTypeAndAmountToFill(out eFuelType o_FuelType, out float o_FuelAmountToAdd)
         {
 
@@ -239,7 +276,7 @@ namespace Ex03.ConsoleUI
         public void GetElectricAmountToCharge(out float o_ElectricAmountToAdd)
         {
             o_ElectricAmountToAdd =
-                getValidFloatNumberInputFromUser("Please enter the amount of electric to charge the vehicle");
+                getValidFloatNumberInputFromUser("Please enter the amount of minutes to charge the vehicle") / k_MinutesInHour;
         }
 
         public string GetInputStringFromUser(string i_Name)
@@ -268,7 +305,7 @@ namespace Ex03.ConsoleUI
                 }
                 else if(parameter.Type == typeof(int))
                 {
-                    parameter.Value = getValidIntegerInRange(int.MinValue, int.MaxValue, parameter.Name);
+                    parameter.Value = getValidIntegerInRange(0, int.MaxValue, parameter.Name, typeof(int));
                 }
                 else if (parameter.Type == typeof(float))
                 {
@@ -289,10 +326,10 @@ namespace Ex03.ConsoleUI
             float airPressureInput =
                 getValidFloatNumberInputFromUser($"Please enter the amount of air pressure to inflate the tires in vehicle (0-{i_MaxWheelPressureAllow})");
 
-            while (!float.TryParse(Console.ReadLine(), out airPressureInput))
+            /*while (!float.TryParse(Console.ReadLine(), out airPressureInput))
             {
                 Console.Write(k_InvalidInputMsg);
-            }
+            }*/
 
             return airPressureInput;
         }

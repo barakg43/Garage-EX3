@@ -27,6 +27,11 @@ namespace Ex03.GarageLogic
             {
                 return m_CurrentEnergyAmount;
             }
+
+            set
+            {
+                m_CurrentEnergyAmount = value;
+            }
         }
 
         protected void AddEnergyToSource(float i_EnergyAmountToAdd)
@@ -40,7 +45,7 @@ namespace Ex03.GarageLogic
         }
         public float GetEnergyPercentRemaining()
         {
-            float energyPercentRemainFraction = 1-(CurrentEnergyAmount / MaxEnergyAmount);
+            float energyPercentRemainFraction = CurrentEnergyAmount / MaxEnergyAmount;
 
             return energyPercentRemainFraction * 100;
         }

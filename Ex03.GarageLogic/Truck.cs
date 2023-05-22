@@ -17,7 +17,7 @@ namespace Ex03.GarageLogic
 
         public Truck(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
-            m_Type = i_EnergyType;
+            m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxTruckTirePressure, k_TruckWheelAmount);
         }
 
@@ -38,7 +38,7 @@ namespace Ex03.GarageLogic
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            SetEnergySource(m_Type);
+            SetEnergySource(m_EnergyType);
             foreach (ParameterWrapper parameter in i_Parameters)
             {
                 if (parameter.Type == typeof(float))
