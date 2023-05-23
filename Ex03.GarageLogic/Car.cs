@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace Ex03.GarageLogic
 {
@@ -15,24 +12,23 @@ namespace Ex03.GarageLogic
         private const float k_MaxBatteryCapacity = 5.2f;
         private const string k_ColorPropriety = "Car Color";
         private const string k_DoorAmountPropriety = "Amount Of Door";
+
         public enum eDoorAmount
         {
             TwoDoors = 2,
             ThreeDoors,
             FourDoors,
             FiveDoors
-
         }
 
         private eCarColor m_Color;
         private eDoorAmount m_CarDoorNumber;
 
-        public Car(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base( i_ModelName, i_LicensePlate)
+        public Car(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
             m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxAirPressureInTire, k_WheelAmount);
         }
-
 
         public override float GetMaxWheelPressureAllow()
         {
@@ -62,10 +58,12 @@ namespace Ex03.GarageLogic
                 {
                     m_CarDoorNumber = (eDoorAmount)parameter.Value;
                 }
+                else
+                {
+                    throw new FormatException(k_WrongFormatMessage);
+                }
             }
         }
-
-  
 
         protected override void SetEnergySource(EnergySource.eType i_Type)
         {
@@ -86,7 +84,6 @@ namespace Ex03.GarageLogic
 Color: {m_Color}
 Door Amount: {(int)m_CarDoorNumber}
 Wheel Amount:{k_WheelAmount}";
-
         }
     }
 }

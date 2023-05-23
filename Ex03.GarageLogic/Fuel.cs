@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
-    public class Fuel:EnergySource
+    public class Fuel : EnergySource
     {
         private const string k_WrongFuelMessage = "Wrong type of fuel given. Type of fuel should be {0}.";
         private readonly eFuelType r_FuelType;
 
         public Fuel(float i_MaxEnergyAmount, eFuelType i_FuelType)
-            : base( i_MaxEnergyAmount)
+            : base(i_MaxEnergyAmount)
         {
             r_FuelType = i_FuelType;
         }
@@ -36,6 +33,4 @@ namespace Ex03.GarageLogic
             return $"Fuel:: Type: {r_FuelType} | Tank Capacity: {MaxEnergyAmount}L | Level: {GetEnergyPercentRemaining()}% ";
         }
     }
-
-    
 }

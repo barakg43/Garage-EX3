@@ -31,7 +31,6 @@ namespace Ex03.ConsoleUI
                         showVehicleListInGarageFilterByStatus();
                         break;
                     case UserInterface.eMenuOptions.ChangeVehicleStatusInGarage:
-                        //changeVehicleStatus();
                         changeVehicleStatusIfExists();
                         break;
                     case UserInterface.eMenuOptions.InflateVehicleTires:
@@ -60,11 +59,6 @@ namespace Ex03.ConsoleUI
             r_UserInterface.PrintAllElementsInArray(allCVehicleRepairRecords);
         }
 
-        private void chargeVehicleIfInGarage()
-        {
-
-        }
-
         private void chargeVehicle()
         {
             bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
@@ -81,7 +75,6 @@ namespace Ex03.ConsoleUI
                     r_UserInterface.PrintMassage(e.Message);
                 }
             }
-            
         }
 
         private void fuelVehicle()
@@ -99,23 +92,15 @@ namespace Ex03.ConsoleUI
                     r_UserInterface.PrintException(e);
                 }
             }
-            
-        }
-
-        private void inflateAllTiresIfVehicleExits()
-        {
-            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
-
-            if (vehicleInGarage)
-            {
-                r_Garage.InflateVehicleTiresToMaxPressure(licensePlate);
-            }
         }
 
         private void inflateAllVehicleTires()
         {
-            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            r_Garage.InflateVehicleTiresToMaxPressure(vehicleLicensePlate);
+            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+            if (vehicleInGarage)
+            {
+                r_Garage.InflateVehicleTiresToMaxPressure(licensePlate);
+            }
         }
 
         private void changeVehicleStatusIfExists()
@@ -127,14 +112,6 @@ namespace Ex03.ConsoleUI
                 VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInput();
                 r_Garage.ChangeVehicleStatus(licensePlate, repairStatus);
             }
-        }
-
-        private void changeVehicleStatus()
-        {
-            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInput();
-
-            r_Garage.ChangeVehicleStatus(vehicleLicensePlate, repairStatus);
         }
 
         private bool getLicensePlateIfVehicleInGarage(out string o_LicensePlate)
@@ -164,10 +141,12 @@ namespace Ex03.ConsoleUI
             
             return vehicleLicensePlate;
         }
+
         private void showVehicleListInGarageFilterByStatus()
         {
             bool isFiltered = r_UserInterface.GetUserInputIfWantFilteredVehicleList();
             VehicleRepairRecord.eRepairStatus repairStatus = VehicleRepairRecord.eRepairStatus.InRepair;
+
             if (isFiltered)
             {
                 repairStatus = r_UserInterface.GetRepairStatusInput();
@@ -193,13 +172,10 @@ namespace Ex03.ConsoleUI
             }
         }
 
-
         private void createNewVehicle(string i_LicensePlate)
         {
             string ownerName, ownerPhoneNumber;
             VehicleRepairRecord newVehicle;
-            eFuelType fuelType;
-            float energyToFill;
             VehicleFactory.eAvailableVehicle vehicleType = r_UserInterface.GetVehicleTypeInputFromUser();
             string modelName = r_UserInterface.GetInputStringFromUser("model name");
             string wheelManufacturer = r_UserInterface.GetInputStringFromUser("Wheel manufacturer");
@@ -213,8 +189,6 @@ namespace Ex03.ConsoleUI
             ownerPhoneNumber = r_UserInterface.GetInputStringFromUser("Owner phone number");
             newVehicle = new VehicleRepairRecord(vehicle, ownerName, ownerPhoneNumber);
             r_Garage.AddVehicle(newVehicle);
-
- 
         }
 
         private void initialVehicleEnergySourceFilling(Vehicle i_Vehicle)
@@ -238,8 +212,5 @@ namespace Ex03.ConsoleUI
 
             i_Vehicle.EnergySource.CurrentEnergyAmount = energyToFill;
         }
-
-
-
     }
 }

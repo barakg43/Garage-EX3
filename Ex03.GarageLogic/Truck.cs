@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -44,11 +42,14 @@ namespace Ex03.GarageLogic
                 if (parameter.Type == typeof(float))
                 {
                     r_CargoVolume = (float)parameter.Value;
-                   
                 }
                 else if (parameter.Type == typeof(bool))
                 {
                     m_IsTransportingDangerousMaterials = (bool)parameter.Value;
+                }
+                else
+                {
+                    throw new FormatException(k_WrongFormatMessage);
                 }
             }
         }

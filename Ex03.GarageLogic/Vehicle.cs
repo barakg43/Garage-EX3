@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Ex03.GarageLogic
@@ -10,10 +9,12 @@ namespace Ex03.GarageLogic
         private readonly string r_ModelName;
         private readonly string r_LicensePlate;
         protected readonly List<Wheel> r_Wheels;
+        protected const string k_WrongFormatMessage = "Given Parameter type doesn't match any member.";
+
         private EnergySource m_EnergySource;
         protected EnergySource.eType m_EnergyType;
 
-        public Vehicle( string i_ModelName, string i_LicensePlate)
+        public Vehicle(string i_ModelName, string i_LicensePlate)
         {
             r_ModelName = i_ModelName;
             r_LicensePlate = i_LicensePlate;
@@ -34,10 +35,12 @@ namespace Ex03.GarageLogic
         {
             get => r_ModelName;
         }
+
         public string LicensePlate
         {
             get => r_LicensePlate;
         }
+
         public List<Wheel> Wheels => r_Wheels;
 
         public EnergySource EnergySource
@@ -57,21 +60,22 @@ namespace Ex03.GarageLogic
             {
                 singleTire.InflateTire(i_AirPressureToAdd);
             }
-
         }
 
-
         public abstract List<ParameterWrapper> GetUniquePropertiesDataForVehicle();
+
         public abstract void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters);
 
-        protected void AssembleWheelsToVehicle(string i_WheelManufacturer, float i_MaximumTirePressure,int i_WheelAmount)
+        protected void AssembleWheelsToVehicle(string i_WheelManufacturer, float i_MaximumTirePressure, int i_WheelAmount)
         {
             for (int i = 0; i < i_WheelAmount; i++)
             {
                 r_Wheels.Add(new Wheel(i_WheelManufacturer, i_MaximumTirePressure));
             }
         }
+
         protected abstract void SetEnergySource(EnergySource.eType i_Type);
+
         public float MaxEnergyAmountAllow => m_EnergySource.MaxEnergyAmount;
 
         private string getWheelsDetails()
@@ -81,12 +85,11 @@ namespace Ex03.GarageLogic
 
             foreach(Wheel wheel in Wheels)
             {
-                allWheelsDetails.AppendFormat("{0}. {1}{2}",wheelNumber++,wheel, Environment.NewLine);
+                allWheelsDetails.AppendFormat("{0}. {1}{2}", wheelNumber++, wheel, Environment.NewLine);
             }
 
             return allWheelsDetails.ToString();
         }
-
 
         public override string ToString()
         {

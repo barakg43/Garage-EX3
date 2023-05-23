@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -33,7 +31,6 @@ namespace Ex03.GarageLogic
         {
             List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
 
-
             parameterList.Add(new ParameterWrapper(typeof(eMotorcycleLicenseType), "License Type"));
             parameterList.Add(new ParameterWrapper(typeof(int), "Engine Capacity"));
 
@@ -53,9 +50,12 @@ namespace Ex03.GarageLogic
                 {
                     m_EngineCapacity = (int)parameter.Value;
                 }
+                else
+                {
+                    throw new FormatException(k_WrongFormatMessage);
+                }
             }
         }
-
 
         protected override void SetEnergySource(EnergySource.eType i_Type)
         {

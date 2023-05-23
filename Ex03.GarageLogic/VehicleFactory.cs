@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
-
     public class VehicleFactory
     {
         public enum eAvailableVehicle 
@@ -17,9 +11,9 @@ namespace Ex03.GarageLogic
             Truck,
         }
 
-        public static Vehicle CreateVehicle(eAvailableVehicle i_VehicleType ,string i_ModelName, string i_LicensePlate, string i_WheelManufacturer)
+        public static Vehicle CreateVehicle(eAvailableVehicle i_VehicleType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer)
         {
-            Vehicle vehicle=null;
+            Vehicle vehicle = null;
             switch(i_VehicleType)
             {
                 case eAvailableVehicle.FuelBike:
