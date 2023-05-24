@@ -7,11 +7,10 @@ namespace Ex03.GarageLogic
     {
         private const int k_TruckWheelAmount = 14;
         private const float k_MaxTruckTirePressure = 26.0f;
-        private const eFuelType k_TruckFuelType = eFuelType.Soler;
+        private const Fuel.eType k_TruckFuelType = Fuel.eType.Soler;
         private const float k_TruckFuelCapacity = 135f;
-
         private bool m_IsTransportingDangerousMaterials;
-        private float r_CargoVolume;
+        private float m_CargoVolume;
 
         public Truck(EnergySource.eEnergyType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
@@ -41,7 +40,7 @@ namespace Ex03.GarageLogic
             {
                 if (parameter.Type == typeof(float))
                 {
-                    r_CargoVolume = (float)parameter.Value;
+                    m_CargoVolume = (float)parameter.Value;
                 }
                 else if (parameter.Type == typeof(bool))
                 {
@@ -57,6 +56,15 @@ namespace Ex03.GarageLogic
         protected override void SetEnergySource(EnergySource.eEnergyType i_Type)
         {
             EnergySource = new Fuel(k_TruckFuelCapacity, k_TruckFuelType);
+        }
+
+        public override string ToString()
+        {
+            return $@"Truck::
+{base.ToString()}
+Is Transporting Dangerous Materials: {m_IsTransportingDangerousMaterials}
+Cargo Volume: {m_CargoVolume}
+Wheel Amount:{k_TruckWheelAmount}";
         }
     }
 }

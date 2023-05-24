@@ -36,10 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Car.cs" />
-    <Compile Include="eCarColor.cs" />
-    <Compile Include="eFuelType.cs" />
     <Compile Include="Electric.cs" />
-    <Compile Include="eMotorcycleLicenseType.cs" />
     <Compile Include="EnergySource.cs" />
     <Compile Include="Fuel.cs" />
     <Compile Include="Garage.cs" />

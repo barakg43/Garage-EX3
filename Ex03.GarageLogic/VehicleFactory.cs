@@ -1,4 +1,6 @@
-﻿namespace Ex03.GarageLogic
+﻿using System;
+
+namespace Ex03.GarageLogic
 {
     public class VehicleFactory
     {
@@ -13,7 +15,8 @@
 
         public static Vehicle CreateVehicle(eAvailableVehicle i_VehicleType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer)
         {
-            Vehicle vehicle = null;
+            Vehicle vehicle;
+
             switch(i_VehicleType)
             {
                 case eAvailableVehicle.FuelBike:
@@ -31,6 +34,8 @@
                 case eAvailableVehicle.Truck:
                     vehicle = new Truck(EnergySource.eEnergyType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
                     break;
+                default:
+                    throw new ArgumentException($"Factory NOT implemented building a {i_VehicleType} vehicle");
             }
 
             return vehicle;

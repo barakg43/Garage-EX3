@@ -41,7 +41,7 @@
         public override string ToString()
         {
             return string.Format(
-                "Manufacturer Name:{0}|Maximum Tire Pressure Allow:{1} |CurrentTirePressure:{2}",
+                "Manufacturer Name: {0} | Maximum Tire Pressure Allow: {1} | CurrentTirePressure: {2}",
                 r_ManufacturerName,
                 r_MaximumTirePressure,
                 m_CurrentTirePressure);

@@ -9,12 +9,19 @@
 
         public void ChargeVehicle(float i_ChargingTimeToAdd)
         {
-            AddEnergyToSource(i_ChargingTimeToAdd);
+            try
+            {
+                AddEnergyToSource(i_ChargingTimeToAdd);
+            }
+            catch(ValueOutOfRangeException outOfRange)
+            {
+                throw new ValueOutOfRangeException(outOfRange.MinValue, outOfRange.MaxValue * 60);
+            }
         }
 
         public override string ToString()
         {
-            return $"Electric:: Battery Capacity: {MaxEnergyAmount} Hours| Left Energy: {GetEnergyPercentRemaining()}% ";
+            return $"Electric:: Battery Capacity: {MaxEnergyAmount} Hours| Left Energy: {GetEnergyPercentRemaining():F}% ";
         }
     }
 }

@@ -4,8 +4,7 @@ namespace Ex03.GarageLogic
 {
     public class ValueOutOfRangeException : Exception
     {
-        private const string k_ExceptionMsg = "Given Value is out of range and should be between {0}-{1}";
-
+        private const string k_ExceptionMsg = "Given Value is out of range and should be between {0} - {1:F}";
         private readonly float r_MinValue;
         private readonly float r_MaxValue;
         
