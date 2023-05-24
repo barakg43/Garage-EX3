@@ -1,8 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace Ex03.GarageLogic
 {
@@ -15,17 +13,11 @@ namespace Ex03.GarageLogic
             r_Vehicles = new Dictionary<string, VehicleRepairRecord>();
         }
 
-        public enum eGarageStatus
-        {
-            RepairInProgress = 1,
-            RepairDone,
-            Payed,
-        }
-
         public void AddVehicle(VehicleRepairRecord i_NewVehicle)
         {
             r_Vehicles.Add(i_NewVehicle.VehicleToRepair.LicensePlate, i_NewVehicle);
         }
+
         public bool IsVehicleExist(string i_VehicleLicensePlate)
         {
             return r_Vehicles.ContainsKey(i_VehicleLicensePlate);
@@ -79,7 +71,7 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                throw new WrongEnergyTypeException(EnergySource.eType.Fuel, EnergySource.eType.Electric);
+                throw new WrongEnergyTypeException(EnergySource.eEnergyType.Fuel, EnergySource.eEnergyType.Electric);
             }
         }
 
@@ -92,7 +84,7 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                throw new WrongEnergyTypeException(EnergySource.eType.Fuel, EnergySource.eType.Electric);
+                throw new WrongEnergyTypeException(EnergySource.eEnergyType.Fuel, EnergySource.eEnergyType.Electric);
             }
         }
 

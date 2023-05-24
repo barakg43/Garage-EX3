@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -16,11 +14,11 @@ namespace Ex03.GarageLogic
         private eMotorcycleLicenseType m_LicenseType;
         private int m_EngineCapacity;
 
-        public Motorcycle(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
+        public Motorcycle(EnergySource.eEnergyType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
             /*m_LicenseType = i_LicenseType;
             m_EngineCapacity = i_EngineCapacity;*/
-            m_Type = i_EnergyType;
+            m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxMotorcycleTirePressure, k_MotorcycleWheelAmount);
         }
 
@@ -33,7 +31,6 @@ namespace Ex03.GarageLogic
         {
             List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
 
-
             parameterList.Add(new ParameterWrapper(typeof(eMotorcycleLicenseType), "License Type"));
             parameterList.Add(new ParameterWrapper(typeof(int), "Engine Capacity"));
 
@@ -42,7 +39,7 @@ namespace Ex03.GarageLogic
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            SetEnergySource(m_Type);
+            SetEnergySource(m_EnergyType);
             foreach (ParameterWrapper parameter in i_Parameters)
             {
                 if (parameter.Type == typeof(eMotorcycleLicenseType))
@@ -53,17 +50,20 @@ namespace Ex03.GarageLogic
                 {
                     m_EngineCapacity = (int)parameter.Value;
                 }
+                else
+                {
+                    throw new FormatException(k_WrongFormatMessage);
+                }
             }
         }
 
-
-        protected override void SetEnergySource(EnergySource.eType i_Type)
+        protected override void SetEnergySource(EnergySource.eEnergyType i_Type)
         {
-            if (i_Type == EnergySource.eType.Electric)
+            if (i_Type == EnergySource.eEnergyType.Electric)
             {
                 EnergySource = new Electric(k_MotorcycleBatteryCapacity);
             }
-            else if (i_Type == EnergySource.eType.Fuel)
+            else if (i_Type == EnergySource.eEnergyType.Fuel)
             {
                 EnergySource = new Fuel(k_MotorcycleFuelCapacity, k_MotorcycleFuelType);
             }

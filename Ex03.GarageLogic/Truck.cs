@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -15,9 +13,9 @@ namespace Ex03.GarageLogic
         private bool m_IsTransportingDangerousMaterials;
         private float r_CargoVolume;
 
-        public Truck(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
+        public Truck(EnergySource.eEnergyType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
-            m_Type = i_EnergyType;
+            m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxTruckTirePressure, k_TruckWheelAmount);
         }
 
@@ -38,22 +36,25 @@ namespace Ex03.GarageLogic
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            SetEnergySource(m_Type);
+            SetEnergySource(m_EnergyType);
             foreach (ParameterWrapper parameter in i_Parameters)
             {
                 if (parameter.Type == typeof(float))
                 {
                     r_CargoVolume = (float)parameter.Value;
-                   
                 }
                 else if (parameter.Type == typeof(bool))
                 {
                     m_IsTransportingDangerousMaterials = (bool)parameter.Value;
                 }
+                else
+                {
+                    throw new FormatException(k_WrongFormatMessage);
+                }
             }
         }
 
-        protected override void SetEnergySource(EnergySource.eType i_Type)
+        protected override void SetEnergySource(EnergySource.eEnergyType i_Type)
         {
             EnergySource = new Fuel(k_TruckFuelCapacity, k_TruckFuelType);
         }

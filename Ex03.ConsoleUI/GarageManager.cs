@@ -31,7 +31,6 @@ namespace Ex03.ConsoleUI
                         showVehicleListInGarageFilterByStatus();
                         break;
                     case UserInterface.eMenuOptions.ChangeVehicleStatusInGarage:
-                        //changeVehicleStatus();
                         changeVehicleStatusIfExists();
                         break;
                     case UserInterface.eMenuOptions.InflateVehicleTires:
@@ -60,11 +59,6 @@ namespace Ex03.ConsoleUI
             r_UserInterface.PrintAllElementsInArray(allCVehicleRepairRecords);
         }
 
-        private void chargeVehicleIfInGarage()
-        {
-
-        }
-
         private void chargeVehicle()
         {
             bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
@@ -72,9 +66,15 @@ namespace Ex03.ConsoleUI
             if(vehicleInGarage)
             {
                 r_UserInterface.GetElectricAmountToCharge(out float amountToCharge);
-                r_Garage.ChargeVehicleInGarage(licensePlate, amountToCharge);
+                try
+                {
+                    r_Garage.ChargeVehicleInGarage(licensePlate, amountToCharge);
+                }
+                catch(Exception e)
+                {
+                    r_UserInterface.PrintMassage(e.Message);
+                }
             }
-            
         }
 
         private void fuelVehicle()
@@ -92,23 +92,15 @@ namespace Ex03.ConsoleUI
                     r_UserInterface.PrintException(e);
                 }
             }
-            
-        }
-
-        private void inflateAllTiresIfVehicleExits()
-        {
-            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
-
-            if (vehicleInGarage)
-            {
-                r_Garage.InflateVehicleTiresToMaxPressure(licensePlate);
-            }
         }
 
         private void inflateAllVehicleTires()
         {
-            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            r_Garage.InflateVehicleTiresToMaxPressure(vehicleLicensePlate);
+            bool vehicleInGarage = getLicensePlateIfVehicleInGarage(out string licensePlate);
+            if (vehicleInGarage)
+            {
+                r_Garage.InflateVehicleTiresToMaxPressure(licensePlate);
+            }
         }
 
         private void changeVehicleStatusIfExists()
@@ -120,14 +112,6 @@ namespace Ex03.ConsoleUI
                 VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInput();
                 r_Garage.ChangeVehicleStatus(licensePlate, repairStatus);
             }
-        }
-
-        private void changeVehicleStatus()
-        {
-            string vehicleLicensePlate = getExistInGarageVehiclePlateNumber();
-            VehicleRepairRecord.eRepairStatus repairStatus = r_UserInterface.GetRepairStatusInput();
-
-            r_Garage.ChangeVehicleStatus(vehicleLicensePlate, repairStatus);
         }
 
         private bool getLicensePlateIfVehicleInGarage(out string o_LicensePlate)
@@ -157,10 +141,12 @@ namespace Ex03.ConsoleUI
             
             return vehicleLicensePlate;
         }
+
         private void showVehicleListInGarageFilterByStatus()
         {
             bool isFiltered = r_UserInterface.GetUserInputIfWantFilteredVehicleList();
             VehicleRepairRecord.eRepairStatus repairStatus = VehicleRepairRecord.eRepairStatus.InRepair;
+
             if (isFiltered)
             {
                 repairStatus = r_UserInterface.GetRepairStatusInput();
@@ -186,7 +172,6 @@ namespace Ex03.ConsoleUI
             }
         }
 
-
         private void createNewVehicle(string i_LicensePlate)
         {
             string ownerName, ownerPhoneNumber;
@@ -195,19 +180,37 @@ namespace Ex03.ConsoleUI
             string modelName = r_UserInterface.GetInputStringFromUser("model name");
             string wheelManufacturer = r_UserInterface.GetInputStringFromUser("Wheel manufacturer");
             Vehicle vehicle = VehicleFactory.CreateVehicle(vehicleType, modelName, i_LicensePlate, wheelManufacturer);
-            List<ParameterWrapper> proprietyList = r_UserInterface.SetProprietiesForVehicle(vehicle);
-            float tireAirPressure = r_UserInterface.GetAirPressureInput(vehicle.GetMaxWheelPressureAllow());
-
-            vehicle.InflateAirPressureToAllTires(tireAirPressure);
+            List<ParameterWrapper> proprietyList = r_UserInterface.SetPropertiesForVehicle(vehicle);
             vehicle.SetUniquePropertiesDataForVehicle(proprietyList);
+            float tireAirPressure = r_UserInterface.GetAirPressureInput(vehicle.GetMaxWheelPressureAllow());
+            vehicle.InflateAirPressureToAllTires(tireAirPressure);
+            initialVehicleEnergySourceFilling(vehicle);
             ownerName = r_UserInterface.GetInputStringFromUser("Owner name");
             ownerPhoneNumber = r_UserInterface.GetInputStringFromUser("Owner phone number");
             newVehicle = new VehicleRepairRecord(vehicle, ownerName, ownerPhoneNumber);
             r_Garage.AddVehicle(newVehicle);
-
- 
         }
 
+        private void initialVehicleEnergySourceFilling(Vehicle i_Vehicle)
+        {
+            float energyToFill;
 
+            if (i_Vehicle.EnergyType == EnergySource.eEnergyType.Fuel)
+            {
+                energyToFill = r_UserInterface.GetInitialEnergyAmount(
+                    i_Vehicle.EnergySource.MaxEnergyAmount,
+                    "Fuel",
+                    "liter");
+            }
+            else
+            {
+                energyToFill = r_UserInterface.GetInitialEnergyAmount(
+                    i_Vehicle.EnergySource.MaxEnergyAmount,
+                    "Charge",
+                    "hours");
+            }
+
+            i_Vehicle.EnergySource.CurrentEnergyAmount = energyToFill;
+        }
     }
 }

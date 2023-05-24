@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace Ex03.GarageLogic
 {
@@ -13,26 +10,25 @@ namespace Ex03.GarageLogic
         private const eFuelType k_FuelTypeForFuelCar = eFuelType.Octan95;
         private const ushort k_MaxFuelAmount = 46;
         private const float k_MaxBatteryCapacity = 5.2f;
-        private const string k_ColorPropriety = "Car Color";
-        private const string k_DoorAmountPropriety = "Amount Of Door";
+        private const string k_ColorProperty = "Car Color";
+        private const string k_DoorAmountProperty = "Amount Of Door";
+
         public enum eDoorAmount
         {
             TwoDoors = 2,
             ThreeDoors,
             FourDoors,
             FiveDoors
-
         }
 
         private eCarColor m_Color;
         private eDoorAmount m_CarDoorNumber;
 
-        public Car(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base( i_ModelName, i_LicensePlate)
+        public Car(EnergySource.eEnergyType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
-            m_Type = i_EnergyType;
+            m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxAirPressureInTire, k_WheelAmount);
         }
-
 
         public override float GetMaxWheelPressureAllow()
         {
@@ -43,15 +39,15 @@ namespace Ex03.GarageLogic
         {
             List<ParameterWrapper> parameterList = new List<ParameterWrapper>(2);
 
-            parameterList.Add(new ParameterWrapper(typeof(eCarColor), k_ColorPropriety));
-            parameterList.Add(new ParameterWrapper(typeof(eDoorAmount), k_DoorAmountPropriety));
+            parameterList.Add(new ParameterWrapper(typeof(eCarColor), k_ColorProperty));
+            parameterList.Add(new ParameterWrapper(typeof(eDoorAmount), k_DoorAmountProperty));
 
             return parameterList;
         }
 
         public override void SetUniquePropertiesDataForVehicle(List<ParameterWrapper> i_Parameters)
         {
-            SetEnergySource(m_Type);
+            SetEnergySource(m_EnergyType);
             foreach (ParameterWrapper parameter in i_Parameters)
             {
                 if(parameter.Type == typeof(eCarColor))
@@ -62,18 +58,20 @@ namespace Ex03.GarageLogic
                 {
                     m_CarDoorNumber = (eDoorAmount)parameter.Value;
                 }
+                else
+                {
+                    throw new FormatException(k_WrongFormatMessage);
+                }
             }
         }
 
-  
-
-        protected override void SetEnergySource(EnergySource.eType i_Type)
+        protected override void SetEnergySource(EnergySource.eEnergyType i_Type)
         {
-            if(i_Type == EnergySource.eType.Electric)
+            if(i_Type == EnergySource.eEnergyType.Electric)
             {
                 EnergySource = new Electric(k_MaxBatteryCapacity);
             }
-            else if(i_Type == EnergySource.eType.Fuel)
+            else if(i_Type == EnergySource.eEnergyType.Fuel)
             {
                 EnergySource = new Fuel(k_MaxFuelAmount, k_FuelTypeForFuelCar);
             }
@@ -86,7 +84,6 @@ namespace Ex03.GarageLogic
 Color: {m_Color}
 Door Amount: {(int)m_CarDoorNumber}
 Wheel Amount:{k_WheelAmount}";
-
         }
     }
 }

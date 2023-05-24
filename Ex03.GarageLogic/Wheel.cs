@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
     public class Wheel
     {
@@ -37,6 +32,7 @@ namespace Ex03.GarageLogic
                 throw new ValueOutOfRangeException(0, r_MaximumTirePressure - m_CurrentTirePressure);
             }
         }
+
         public void InflateTireToMaxPressure()
         {
             m_CurrentTirePressure = r_MaximumTirePressure;

@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
-    class WrongEnergyTypeException: Exception
+    public class WrongEnergyTypeException : Exception
     {
-        private const string k_ExceptionMsg = "This vehicle doesn't run on {0}, but on {1}";//bad phrasing
+        private const string k_ExceptionMsg = "This vehicle doesn't run on {0}, but on {1}";
 
-        public WrongEnergyTypeException(EnergySource.eType i_GivenEnergyType, EnergySource.eType i_RequiredEnergyType)
+        public WrongEnergyTypeException(EnergySource.eEnergyType i_GivenEnergyType, EnergySource.eEnergyType i_RequiredEnergyType)
             : base(string.Format(k_ExceptionMsg, i_GivenEnergyType, i_RequiredEnergyType))
-        { }
+        {
+        }
     }
 }

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
-
     public class VehicleFactory
     {
         public enum eAvailableVehicle 
@@ -17,25 +11,25 @@ namespace Ex03.GarageLogic
             Truck,
         }
 
-        public static Vehicle CreateVehicle(eAvailableVehicle i_VehicleType ,string i_ModelName, string i_LicensePlate, string i_WheelManufacturer)
+        public static Vehicle CreateVehicle(eAvailableVehicle i_VehicleType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer)
         {
-            Vehicle vehicle=null;
+            Vehicle vehicle = null;
             switch(i_VehicleType)
             {
                 case eAvailableVehicle.FuelBike:
-                    vehicle = new Motorcycle(EnergySource.eType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
+                    vehicle = new Motorcycle(EnergySource.eEnergyType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
                     break;
                 case eAvailableVehicle.ElectricBike:
-                    vehicle = new Motorcycle(EnergySource.eType.Electric, i_ModelName, i_LicensePlate, i_WheelManufacturer);
+                    vehicle = new Motorcycle(EnergySource.eEnergyType.Electric, i_ModelName, i_LicensePlate, i_WheelManufacturer);
                     break;
                 case eAvailableVehicle.FuelCar:
-                    vehicle = new Car(EnergySource.eType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
+                    vehicle = new Car(EnergySource.eEnergyType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
                     break;
                 case eAvailableVehicle.ElectricCar:
-                    vehicle = new Car(EnergySource.eType.Electric, i_ModelName, i_LicensePlate, i_WheelManufacturer);
+                    vehicle = new Car(EnergySource.eEnergyType.Electric, i_ModelName, i_LicensePlate, i_WheelManufacturer);
                     break;
                 case eAvailableVehicle.Truck:
-                    vehicle = new Truck(EnergySource.eType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
+                    vehicle = new Truck(EnergySource.eEnergyType.Fuel, i_ModelName, i_LicensePlate, i_WheelManufacturer);
                     break;
             }
 
