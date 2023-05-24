@@ -6,7 +6,7 @@ namespace Ex03.GarageLogic
     {
         private const string k_ExceptionMsg = "This vehicle doesn't run on {0}, but on {1}";
 
-        public WrongEnergyTypeException(EnergySource.eType i_GivenEnergyType, EnergySource.eType i_RequiredEnergyType)
+        public WrongEnergyTypeException(EnergySource.eEnergyType i_GivenEnergyType, EnergySource.eEnergyType i_RequiredEnergyType)
             : base(string.Format(k_ExceptionMsg, i_GivenEnergyType, i_RequiredEnergyType))
         {
         }

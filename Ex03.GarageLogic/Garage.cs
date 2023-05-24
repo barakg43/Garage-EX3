@@ -71,7 +71,7 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                throw new WrongEnergyTypeException(EnergySource.eType.Fuel, EnergySource.eType.Electric);
+                throw new WrongEnergyTypeException(EnergySource.eEnergyType.Fuel, EnergySource.eEnergyType.Electric);
             }
         }
 
@@ -84,7 +84,7 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                throw new WrongEnergyTypeException(EnergySource.eType.Fuel, EnergySource.eType.Electric);
+                throw new WrongEnergyTypeException(EnergySource.eEnergyType.Fuel, EnergySource.eEnergyType.Electric);
             }
         }
 

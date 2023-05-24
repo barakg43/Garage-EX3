@@ -180,7 +180,7 @@ namespace Ex03.ConsoleUI
             string modelName = r_UserInterface.GetInputStringFromUser("model name");
             string wheelManufacturer = r_UserInterface.GetInputStringFromUser("Wheel manufacturer");
             Vehicle vehicle = VehicleFactory.CreateVehicle(vehicleType, modelName, i_LicensePlate, wheelManufacturer);
-            List<ParameterWrapper> proprietyList = r_UserInterface.SetProprietiesForVehicle(vehicle);
+            List<ParameterWrapper> proprietyList = r_UserInterface.SetPropertiesForVehicle(vehicle);
             vehicle.SetUniquePropertiesDataForVehicle(proprietyList);
             float tireAirPressure = r_UserInterface.GetAirPressureInput(vehicle.GetMaxWheelPressureAllow());
             vehicle.InflateAirPressureToAllTires(tireAirPressure);
@@ -195,7 +195,7 @@ namespace Ex03.ConsoleUI
         {
             float energyToFill;
 
-            if (i_Vehicle.EnergyType == EnergySource.eType.Fuel)
+            if (i_Vehicle.EnergyType == EnergySource.eEnergyType.Fuel)
             {
                 energyToFill = r_UserInterface.GetInitialEnergyAmount(
                     i_Vehicle.EnergySource.MaxEnergyAmount,

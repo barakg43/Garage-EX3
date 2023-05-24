@@ -12,7 +12,7 @@ namespace Ex03.GarageLogic
         protected const string k_WrongFormatMessage = "Given Parameter type doesn't match any member.";
 
         private EnergySource m_EnergySource;
-        protected EnergySource.eType m_EnergyType;
+        protected EnergySource.eEnergyType m_EnergyType;
 
         public Vehicle(string i_ModelName, string i_LicensePlate)
         {
@@ -49,7 +49,7 @@ namespace Ex03.GarageLogic
             protected set => m_EnergySource = value;
         }
 
-        public EnergySource.eType EnergyType
+        public EnergySource.eEnergyType EnergyType
         {
             get => m_EnergyType;
         }
@@ -74,7 +74,7 @@ namespace Ex03.GarageLogic
             }
         }
 
-        protected abstract void SetEnergySource(EnergySource.eType i_Type);
+        protected abstract void SetEnergySource(EnergySource.eEnergyType i_Type);
 
         public float MaxEnergyAmountAllow => m_EnergySource.MaxEnergyAmount;
 

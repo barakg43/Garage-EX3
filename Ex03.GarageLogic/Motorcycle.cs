@@ -14,7 +14,7 @@ namespace Ex03.GarageLogic
         private eMotorcycleLicenseType m_LicenseType;
         private int m_EngineCapacity;
 
-        public Motorcycle(EnergySource.eType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
+        public Motorcycle(EnergySource.eEnergyType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
             /*m_LicenseType = i_LicenseType;
             m_EngineCapacity = i_EngineCapacity;*/
@@ -57,13 +57,13 @@ namespace Ex03.GarageLogic
             }
         }
 
-        protected override void SetEnergySource(EnergySource.eType i_Type)
+        protected override void SetEnergySource(EnergySource.eEnergyType i_Type)
         {
-            if (i_Type == EnergySource.eType.Electric)
+            if (i_Type == EnergySource.eEnergyType.Electric)
             {
                 EnergySource = new Electric(k_MotorcycleBatteryCapacity);
             }
-            else if (i_Type == EnergySource.eType.Fuel)
+            else if (i_Type == EnergySource.eEnergyType.Fuel)
             {
                 EnergySource = new Fuel(k_MotorcycleFuelCapacity, k_MotorcycleFuelType);
             }

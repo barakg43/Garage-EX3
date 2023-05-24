@@ -10,7 +10,7 @@
             MaxEnergyAmount = i_MaxEnergyAmount;
         }
 
-        public enum eType
+        public enum eEnergyType
         {
             Electric = 1,
             Fuel

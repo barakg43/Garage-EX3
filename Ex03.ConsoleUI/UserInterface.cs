@@ -260,7 +260,7 @@ namespace Ex03.ConsoleUI
             return (VehicleFactory.eAvailableVehicle)userInput;
         }
 
-        public List<ParameterWrapper> SetProprietiesForVehicle(Vehicle i_Vehicle)
+        public List<ParameterWrapper> SetPropertiesForVehicle(Vehicle i_Vehicle)
         {
             List<ParameterWrapper> vehicleProprietyList = i_Vehicle.GetUniquePropertiesDataForVehicle();
 
