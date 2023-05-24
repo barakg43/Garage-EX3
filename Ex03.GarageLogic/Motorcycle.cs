@@ -7,17 +7,22 @@ namespace Ex03.GarageLogic
     {
         private const int k_MotorcycleWheelAmount = 2;
         private const ushort k_MaxMotorcycleTirePressure = 31;
-        private const eFuelType k_MotorcycleFuelType = eFuelType.Octan98;
+        private const Fuel.eType k_MotorcycleFuelType = Fuel.eType.Octan98;
         private const float k_MotorcycleFuelCapacity = 6.4f;
         private const float k_MotorcycleBatteryCapacity = 2.6f;
-
         private eMotorcycleLicenseType m_LicenseType;
         private int m_EngineCapacity;
 
+        public enum eMotorcycleLicenseType
+        {
+            A1 = 1,
+            A2,
+            AA,
+            B1,
+        }
+
         public Motorcycle(EnergySource.eEnergyType i_EnergyType, string i_ModelName, string i_LicensePlate, string i_WheelManufacturer) : base(i_ModelName, i_LicensePlate)
         {
-            /*m_LicenseType = i_LicenseType;
-            m_EngineCapacity = i_EngineCapacity;*/
             m_EnergyType = i_EnergyType;
             AssembleWheelsToVehicle(i_WheelManufacturer, k_MaxMotorcycleTirePressure, k_MotorcycleWheelAmount);
         }
@@ -67,6 +72,15 @@ namespace Ex03.GarageLogic
             {
                 EnergySource = new Fuel(k_MotorcycleFuelCapacity, k_MotorcycleFuelType);
             }
+        }
+
+        public override string ToString()
+        {
+            return $@"Motorcycle::
+{base.ToString()}
+License Type: {m_LicenseType}
+Engine Capacity: {m_EngineCapacity}
+Wheel Amount: {k_MotorcycleWheelAmount}";
         }
     }
 }

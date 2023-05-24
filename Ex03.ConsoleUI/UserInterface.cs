@@ -63,7 +63,6 @@ namespace Ex03.ConsoleUI
             {
                 outputStringBuilder = new StringBuilder();
                 outputStringBuilder.Append(i_InputCamelCaseWords[0]);
-
                 for (int i = 1; i < i_InputCamelCaseWords.Length; i++)
                 {
                     if (char.IsUpper(i_InputCamelCaseWords[i]) && (i + 1 < i_InputCamelCaseWords.Length && !char.IsUpper(i_InputCamelCaseWords[i + 1])))
@@ -83,6 +82,7 @@ namespace Ex03.ConsoleUI
         public eMenuOptions GetAndCheckUserInputForMenuItem()
         {
             int userInput = getValidIntegerInRange((int)eMenuOptions.EnterVehicleToGarage, (int)eMenuOptions.Quit, "menu option", typeof(eMenuOptions));
+
             return (eMenuOptions)userInput;
         }
 
@@ -100,7 +100,8 @@ namespace Ex03.ConsoleUI
 
         public string GetLicensePlateInputFromUser()
         {
-            Console.WriteLine("Please enter license plate to the desire vehicle:");
+            Console.Write("Please enter license plate to the desire vehicle: ");
+
             return Console.ReadLine();
         }
 
@@ -111,25 +112,28 @@ namespace Ex03.ConsoleUI
 
         private int getValidIntegerInRange(int i_MinValue, int i_MaxValue, string i_ObjectName, Type i_ObjectType)
         {
-            bool inputIsInvalid = true;
+            bool inputIsValid = false;
             int userInput = 0;
 
-            Console.WriteLine($"Please select a {i_ObjectName} between {i_MinValue} and {i_MaxValue}");
-            while (inputIsInvalid)
+            Console.Write($"Please select a {i_ObjectName} between {i_MinValue} and {i_MaxValue}: ");
+            while (!inputIsValid)
             {
-                int.TryParse(Console.ReadLine(), out userInput);
-                if(i_ObjectType.IsEnum)
+                inputIsValid = int.TryParse(Console.ReadLine(), out userInput);
+                if(inputIsValid)
                 {
-                    inputIsInvalid = !Enum.IsDefined(i_ObjectType, userInput);
-                }
-                else
-                {
-                    inputIsInvalid = userInput < i_MinValue || userInput > i_MaxValue;
+                    if (i_ObjectType.IsEnum)
+                    {
+                        inputIsValid = Enum.IsDefined(i_ObjectType, userInput);
+                    }
+                    else
+                    {
+                        inputIsValid = userInput >= i_MinValue && userInput <= i_MaxValue;
+                    }
                 }
 
-                if(inputIsInvalid)
+                if(!inputIsValid)
                 {
-                    Console.WriteLine(k_InvalidInputMsg);
+                    Console.Write(k_InvalidInputMsg);
                 }
             }
 
@@ -141,15 +145,14 @@ namespace Ex03.ConsoleUI
             bool inputIsInvalid = true;
             float userInput = 0f;
 
-            Console.WriteLine($"Please select a {i_ObjectName} between {i_MinValue} and {i_MaxValue} in {i_Unit}");
+            Console.Write($"Please select a float number of {i_ObjectName} between {i_MinValue} and {i_MaxValue} in {i_Unit}: ");
             while (inputIsInvalid)
             {
-                float.TryParse(Console.ReadLine(), out userInput);
-                inputIsInvalid = userInput < i_MinValue || userInput > i_MaxValue;
-
+                inputIsInvalid = !float.TryParse(Console.ReadLine(), out userInput)
+                                 || (userInput < i_MinValue || userInput > i_MaxValue);
                 if (inputIsInvalid)
                 {
-                    Console.WriteLine(k_InvalidInputMsg);
+                    Console.Write(k_InvalidInputMsg);
                 }
             }
 
@@ -174,7 +177,7 @@ namespace Ex03.ConsoleUI
         {
             if(i_ElementArray == null || i_ElementArray.Count == 0)
             {
-                Console.WriteLine("No Element to print");
+                Console.WriteLine("No Element to print.");
             }
             else
             {
@@ -185,27 +188,28 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private eFuelType getValidFuelTypeFromUser()
+        private Fuel.eType getValidFuelTypeFromUser()
         {
-            int userInput = getValidEnumInputFromUser(typeof(eFuelType), "fuel type");
+            int userInput = getValidEnumInputFromUser(typeof(Fuel.eType), "fuel type");
 
-            return (eFuelType)userInput;
+            return (Fuel.eType)userInput;
         }
 
         private int getValidEnumInputFromUser(Type i_EnumType, string i_ObjectName)
         {
             int userInput;
+            Array enumValues;
+            int minValue, maxValue;
 
             if (!i_EnumType.IsEnum)
             {
                 throw new ArgumentException("type is not enum type");
             }
 
-            Array enumValues = Enum.GetValues(i_EnumType);
-            int minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
-            int maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
-
-            for (int i = 0; i < enumValues.Length; i++)
+             enumValues = Enum.GetValues(i_EnumType);
+             minValue = (int)enumValues.GetValue(enumValues.GetLowerBound(0));
+             maxValue = (int)enumValues.GetValue(enumValues.GetUpperBound(0));
+             for (int i = 0; i < enumValues.Length; i++)
             {
                 Console.WriteLine($"{(int)enumValues.GetValue(i)}. {addSpacesToCamelCaseWord(enumValues.GetValue(i).ToString())}");
             }
@@ -220,7 +224,6 @@ namespace Ex03.ConsoleUI
             float userInput;
 
             Console.Write(i_InstructionMessage + ": ");
-
             while(!float.TryParse(Console.ReadLine(), out userInput))
             {
                 Console.Write(k_InvalidInputMsg);
@@ -234,9 +237,9 @@ namespace Ex03.ConsoleUI
             return getValidFloatInputInRange(0, i_MaxEnergy, i_ObjectType, i_Unit);
         }
 
-        public void GetFuelTypeAndAmountToFill(out eFuelType o_FuelType, out float o_FuelAmountToAdd)
+        public void GetFuelTypeAndAmountToFill(out Fuel.eType o_FuelType, out float o_FuelAmountToAdd)
         {
-            o_FuelAmountToAdd = getValidFloatNumberInputFromUser("Please enter the amount of fuel to add the vehicle");
+            o_FuelAmountToAdd = getValidFloatNumberInputFromUser("Please enter the amount of fuel(liters) to add the vehicle");
             o_FuelType = getValidFuelTypeFromUser();
         }
 
@@ -246,11 +249,44 @@ namespace Ex03.ConsoleUI
                 getValidFloatNumberInputFromUser("Please enter the amount of minutes to charge the vehicle") / k_MinutesInHour;
         }
 
-        public string GetInputStringFromUser(string i_Name)
+        public string GetInputStringFromUser(string i_Name, bool i_AllowNumbersInString, bool i_AllowLettersInString)
         {
-                Console.Write($"please enter {i_Name} for the vehicle:");
+                bool isValidInput = false;
+                string userInput, inputType;
 
-                return Console.ReadLine();
+                if(i_AllowNumbersInString && !i_AllowLettersInString)
+                {
+                    inputType = "digits only";
+                }
+                else if(!i_AllowNumbersInString && i_AllowLettersInString)
+                {
+                    inputType = "letters only";
+                }
+                else
+                {
+                    inputType = "digits and letters";
+                }
+                
+                Console.Write($"please enter {i_Name} for the vehicle({inputType} allow): ");
+                userInput = Console.ReadLine();
+                while(!isValidInput)
+                {
+                    isValidInput = true;
+                    for(int i = 0; userInput != null && i < userInput.Length && isValidInput; i++)
+                    {
+                        isValidInput = (i_AllowLettersInString && char.IsLetter(userInput[i])) 
+                                       || (i_AllowNumbersInString && char.IsDigit(userInput[i]))
+                                       || (i_AllowLettersInString && char.IsWhiteSpace(userInput[i]));
+                    }
+
+                    if(!isValidInput)
+                    {
+                        Console.Write(k_InvalidInputMsg);
+                        userInput = Console.ReadLine();
+                    }
+                }
+
+                return userInput;
         }
 
         public VehicleFactory.eAvailableVehicle GetVehicleTypeInputFromUser()
@@ -276,7 +312,7 @@ namespace Ex03.ConsoleUI
                 }
                 else if (parameter.Type == typeof(float))
                 {
-                    parameter.Value = getValidFloatNumberInputFromUser(parameter.Name);
+                    parameter.Value = getValidFloatNumberInputFromUser($"Please enter float number of {parameter.Name}");
                 }
                 else if (parameter.Type == typeof(bool))
                 {

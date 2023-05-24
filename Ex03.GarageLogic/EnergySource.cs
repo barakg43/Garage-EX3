@@ -46,7 +46,10 @@
             return energyPercentRemainFraction * 100;
         }
 
-        public float MaxEnergyAmount { get; }
+        public float MaxEnergyAmount
+        {
+            get;
+        }
 
         public override string ToString()
         {

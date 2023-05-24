@@ -2,11 +2,14 @@
 {
     public class VehicleRepairRecord
     {
-        public Vehicle VehicleToRepair { get; }
+        public Vehicle VehicleToRepair
+        {
+            get;
+        }
 
-        public string OwnerName { get; set; }
+        public string OwnerName { get; }
 
-        public string OwnerPhoneNumber { get; set; }
+        public string OwnerPhoneNumber { get; }
 
         public enum eRepairStatus
         {
@@ -28,10 +31,10 @@
         public override string ToString()
         {
           string details =
-$@"Owner name:{OwnerName}
+$@"++++++++++++++ Vehicle ++++++++++++++
+Owner name:{OwnerName}
 Owner Phone Number:{OwnerPhoneNumber}
-Vehicle repair stats:{RepairStatus}
-Vehicle details:
+Vehicle repair status:{RepairStatus}
 {VehicleToRepair}";
 
           return details;

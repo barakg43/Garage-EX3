@@ -10,7 +10,6 @@ namespace Ex03.GarageLogic
         private readonly string r_LicensePlate;
         protected readonly List<Wheel> r_Wheels;
         protected const string k_WrongFormatMessage = "Given Parameter type doesn't match any member.";
-
         private EnergySource m_EnergySource;
         protected EnergySource.eEnergyType m_EnergyType;
 
@@ -30,7 +29,7 @@ namespace Ex03.GarageLogic
         }
 
         public abstract float GetMaxWheelPressureAllow();
-       
+
         public string ModelName
         {
             get => r_ModelName;
@@ -85,7 +84,7 @@ namespace Ex03.GarageLogic
 
             foreach(Wheel wheel in Wheels)
             {
-                allWheelsDetails.AppendFormat("{0}. {1}{2}", wheelNumber++, wheel, Environment.NewLine);
+                allWheelsDetails.AppendFormat(" {0}. {1}{2}", wheelNumber++, wheel, Environment.NewLine);
             }
 
             return allWheelsDetails.ToString();
@@ -97,7 +96,8 @@ namespace Ex03.GarageLogic
 Model Name:{r_ModelName}
 Wheels:
 {getWheelsDetails()}
-Engine:{m_EnergySource}";
+Engine:
+    {m_EnergySource}";
 
             return details;
         }

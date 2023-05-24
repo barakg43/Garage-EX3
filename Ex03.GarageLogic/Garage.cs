@@ -13,9 +13,15 @@ namespace Ex03.GarageLogic
             r_Vehicles = new Dictionary<string, VehicleRepairRecord>();
         }
 
-        public void AddVehicle(VehicleRepairRecord i_NewVehicle)
+        public void AddVehicle(Vehicle i_VehicleToRepair, string i_OwnerName, string i_OwnerPhoneNumber)
         {
-            r_Vehicles.Add(i_NewVehicle.VehicleToRepair.LicensePlate, i_NewVehicle);
+            if(IsVehicleExist(i_VehicleToRepair.LicensePlate))
+            {
+                throw new FormatException(
+                    $"Vehicle with plate number [{i_VehicleToRepair.LicensePlate}] already exist");
+            }
+
+            r_Vehicles.Add(i_VehicleToRepair.LicensePlate, new VehicleRepairRecord(i_VehicleToRepair, i_OwnerName, i_OwnerPhoneNumber));
         }
 
         public bool IsVehicleExist(string i_VehicleLicensePlate)
@@ -26,6 +32,7 @@ namespace Ex03.GarageLogic
         public List<string> GetVehiclePlateNumberListFilterByState(VehicleRepairRecord.eRepairStatus i_RepairStatus, bool i_IsFiltered)
         {
             List<string> filteredList;
+
             if(!i_IsFiltered)
             {
                 filteredList = r_Vehicles.Keys.ToList();
@@ -45,26 +52,29 @@ namespace Ex03.GarageLogic
             return filteredList;
         }
 
-        public void ChangeVehicleStatus(string i_VehicleLicensePlate, VehicleRepairRecord.eRepairStatus i_RepairStatus)
+        public VehicleRepairRecord.eRepairStatus ChangeVehicleStatus(string i_VehicleLicensePlate, VehicleRepairRecord.eRepairStatus i_RepairStatus)
         {
-            VehicleRepairRecord vehicleToUpdate = r_Vehicles[i_VehicleLicensePlate];
-            vehicleToUpdate.RepairStatus = i_RepairStatus;
+            VehicleRepairRecord.eRepairStatus oldRepairStatus;
+
+            checkIfVehicleExistInGarage(i_VehicleLicensePlate);
+            oldRepairStatus = r_Vehicles[i_VehicleLicensePlate].RepairStatus;
+            r_Vehicles[i_VehicleLicensePlate].RepairStatus = i_RepairStatus;
+
+            return oldRepairStatus;
         }
 
         public void InflateVehicleTiresToMaxPressure(string i_VehicleLicensePlate)
         {
-            if(!IsVehicleExist(i_VehicleLicensePlate))
-            {
-                throw new ArgumentException("Vehicle not exist in garage");
-            }
-
+            checkIfVehicleExistInGarage(i_VehicleLicensePlate);
             r_Vehicles[i_VehicleLicensePlate].VehicleToRepair.InflateAllTireToMaxPressure();
         }
 
-        public void FuelVehicleInGarage(string i_VehicleLicensePlate, eFuelType i_FuelType, float i_AmountToFuel)
+        public void FuelVehicleInGarage(string i_VehicleLicensePlate, Fuel.eType i_FuelType, float i_AmountToFuel)
         {
-            Vehicle vehicleToFuel = r_Vehicles[i_VehicleLicensePlate].VehicleToRepair;
+            Vehicle vehicleToFuel;
 
+            checkIfVehicleExistInGarage(i_VehicleLicensePlate);
+            vehicleToFuel = r_Vehicles[i_VehicleLicensePlate].VehicleToRepair;
             if(vehicleToFuel.EnergySource is Fuel fuel)
             {
                 fuel.RefuelVehicle(i_FuelType, i_AmountToFuel);
@@ -77,7 +87,10 @@ namespace Ex03.GarageLogic
 
         public void ChargeVehicleInGarage(string i_VehicleLicensePlate, float i_ElectricAmountToAdd)
         {
-            Vehicle vehicleToCharge = r_Vehicles[i_VehicleLicensePlate].VehicleToRepair;
+            Vehicle vehicleToCharge;
+
+            checkIfVehicleExistInGarage(i_VehicleLicensePlate);
+            vehicleToCharge = r_Vehicles[i_VehicleLicensePlate].VehicleToRepair;
             if (vehicleToCharge.EnergySource is Electric electric)
             {
                 electric.ChargeVehicle(i_ElectricAmountToAdd);
@@ -85,6 +98,14 @@ namespace Ex03.GarageLogic
             else
             {
                 throw new WrongEnergyTypeException(EnergySource.eEnergyType.Fuel, EnergySource.eEnergyType.Electric);
+            }
+        }
+
+        private void checkIfVehicleExistInGarage(string i_LicensePlate)
+        {
+            if (!IsVehicleExist(i_LicensePlate))
+            {
+                throw new ArgumentException($"Vehicle {i_LicensePlate} not exist in garage");
             }
         }
 
