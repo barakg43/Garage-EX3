@@ -1,6 +1,6 @@
 ﻿namespace Ex03.GarageLogic
 {
-    public class Electric : EnergySource
+    internal class Electric : EnergySource
     {
         public Electric(float i_BatteryTimeCapacity)
             : base(i_BatteryTimeCapacity)

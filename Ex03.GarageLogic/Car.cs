@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ex03.GarageLogic
 {
-    public class Car : Vehicle
+    internal class Car : Vehicle
     {
         private const ushort k_WheelAmount = 5;
         private const ushort k_MaxAirPressureInTire = 33;
